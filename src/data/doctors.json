@@ -1,0 +1,33 @@
+[
+  {
+    "id": "d1",
+    "name": "Dr. Anita Sharma",
+    "specialization": "Endodontist",
+    "experience": "8 years",
+    "availableSlots": {
+      "2026-02-10": ["09:00","10:00","14:00"],
+      "2026-02-11": ["11:00","15:00"],
+      "2026-02-12": ["09:30","13:00","16:00"]
+    }
+  },
+  {
+    "id": "d2",
+    "name": "Dr. Ramesh Gupta",
+    "specialization": "Orthodontist",
+    "experience": "10 years",
+    "availableSlots": {
+      "2026-02-10": ["10:30","12:00","17:00"],
+      "2026-02-13": ["09:00","11:00","14:30"]
+    }
+  },
+  {
+    "id": "d3",
+    "name": "Dr. Priya Nair",
+    "specialization": "Prosthodontist",
+    "experience": "6 years",
+    "availableSlots": {
+      "2026-02-11": ["09:00","10:00","11:00"],
+      "2026-02-12": ["14:00","15:30"]
+    }
+  }
+]
