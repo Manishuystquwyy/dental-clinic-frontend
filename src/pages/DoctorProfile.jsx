@@ -1,36 +1,63 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
-import doctorsData from '../data/doctors.json'
 import AppointmentForm from '../components/AppointmentForm'
+import { getDentist } from '../api/dentists'
+import DatePicker from '../components/DatePicker'
 
 export default function DoctorProfile() {
   const { id } = useParams()
-  const doc = doctorsData.find(d => d.id === id)
+  const [doc, setDoc] = useState(null)
+  const [error, setError] = useState('')
   const [date, setDate] = useState('')
   const [time, setTime] = useState('')
   const [booked, setBooked] = useState(null)
+  const today = new Date().toISOString().split('T')[0]
 
-  if (!doc) return <p>Doctor not found</p>
+  const timeSlots = ['09:00', '10:30', '12:00', '14:00', '15:30', '17:00']
+
+  useEffect(() => {
+    let active = true
+    getDentist(id)
+      .then((data) => {
+        if (active) setDoc(data)
+      })
+      .catch((err) => {
+        if (active) setError(err.message || 'Doctor not found.')
+      })
+    return () => {
+      active = false
+    }
+  }, [id])
+
+  if (error) return <p>{error}</p>
+  if (!doc) return <p>Loading...</p>
 
   return (
     <section className="doctor-profile">
       <div className="bio">
         <h2>{doc.name}</h2>
-        <p><strong>Specialization:</strong> {doc.specialization}</p>
-        <p><strong>Experience:</strong> {doc.experience}</p>
+        <p><strong>Experience:</strong> {doc.experienceYears} years</p>
+        <p><strong>Phone:</strong> {doc.phone}</p>
+        <p><strong>Email:</strong> {doc.email}</p>
         <hr />
         <h3>Availability</h3>
         <div>
-          {Object.keys(doc.availableSlots).map(d => (
-            <div key={d} style={{ marginBottom: 8 }}>
-              <strong>{d}</strong>
-              <div style={{ marginTop: 6 }}>
-                {doc.availableSlots[d].map(t => (
-                  <button key={t} onClick={() => { setDate(d); setTime(t); setBooked(null) }} style={{ marginRight: 6, marginBottom:6 }} className={t === time ? 'active' : ''}>{t}</button>
+          <DatePicker
+            label="Choose date"
+            minDate={today}
+            value={date}
+            onChange={(val) => { setDate(val); setTime(''); setBooked(null) }}
+          />
+          {date && (
+            <div style={{ marginTop: 12 }}>
+              <p>Available times:</p>
+              <div className="times">
+                {timeSlots.map((t) => (
+                  <button key={t} onClick={() => { setTime(t); setBooked(null) }} className={t === time ? 'active' : ''}>{t}</button>
                 ))}
               </div>
             </div>
-          ))}
+          )}
         </div>
       </div>
 
@@ -43,7 +70,7 @@ export default function DoctorProfile() {
         {booked && (
           <div className="booking-confirm">
             <h4>Appointment booked</h4>
-            <p>{booked.patientName} — {booked.date} at {booked.time} with {booked.doctorName}</p>
+            <p>{booked.appointmentDate} at {booked.appointmentTime} with {doc.name}</p>
           </div>
         )}
       </div>

@@ -18,7 +18,7 @@ function App() {
           />
           <div className="brand-text">
             <h1>Gayatri Dental Clinic</h1>
-            <p>Compassionate care for your smile</p>
+            <p>Your Smile is Precious to us.</p>
           </div>
         </div>
         <nav className="nav">
@@ -26,6 +26,9 @@ function App() {
           <a href="/services">Services</a>
           <a href="/doctors">Doctors</a>
           <a href="/gallery">Gallery</a>
+          <a href="/book">Book</a>
+          {user && user.role === 'PATIENT' && <a href="/patient-dashboard">My Dashboard</a>}
+          {user && user.role === 'PATIENT' && <a href="/my-profile">My Profile</a>}
           {!user && <a href="/login">Login</a>}
           {!user && <a href="/signup" className="cta">Sign Up</a>}
           {user && <span className={`role-badge role-${user.role.toLowerCase()}`}>{user.role}</span>}

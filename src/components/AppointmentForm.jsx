@@ -1,32 +1,48 @@
 import React, { useState } from 'react'
-
-function saveAppointment(appt) {
-  const key = 'gayatri_appointments'
-  const existing = JSON.parse(localStorage.getItem(key) || '[]')
-  existing.push(appt)
-  localStorage.setItem(key, JSON.stringify(existing))
-}
+import { useLocation, useNavigate } from 'react-router-dom'
+import { createAppointment } from '../api/appointments'
+import { useAuth } from '../context/AuthContext'
 
 export default function AppointmentForm({ doctor, date, time, onBooked }) {
-  const [patientName, setPatientName] = useState('')
-  const [phone, setPhone] = useState('')
+  const { user } = useAuth()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [remarks, setRemarks] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
 
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault()
-    const appt = {
-      id: 'appt_' + Date.now(),
-      doctorId: doctor.id,
-      doctorName: doctor.name,
-      date,
-      time,
-      patientName,
-      phone,
-      status: 'CONFIRMED'
+    if (!user) return
+    setError('')
+    setSubmitting(true)
+    try {
+      const appt = await createAppointment({
+        patientId: Number(user.patientId),
+        dentistId: Number(doctor.id),
+        appointmentDate: date,
+        appointmentTime: time,
+        status: 'BOOKED',
+        remarks: remarks || null,
+      })
+      onBooked(appt)
+      setTimeout(() => alert('Appointment confirmed — a confirmation was sent.'), 200)
+    } catch (err) {
+      setError(err.message || 'Booking failed.')
+    } finally {
+      setSubmitting(false)
     }
-    saveAppointment(appt)
-    onBooked(appt)
-    // simulate notification
-    setTimeout(() => alert('Appointment confirmed — a confirmation was sent.'), 200)
+  }
+
+  if (!user) {
+    return (
+      <div className="appointment-form">
+        <p>Please login or sign up to book an appointment.</p>
+        <button className="primary" onClick={() => navigate('/login', { state: { from: location } })}>
+          Login to Book
+        </button>
+      </div>
+    )
   }
 
   return (
@@ -34,14 +50,13 @@ export default function AppointmentForm({ doctor, date, time, onBooked }) {
       <h4>Booking for {doctor.name}</h4>
       <p>{date} at {time}</p>
       <label>
-        Your name
-        <input value={patientName} onChange={(e) => setPatientName(e.target.value)} required />
+        Notes (optional)
+        <input value={remarks} onChange={(e) => setRemarks(e.target.value)} placeholder="Any concerns or requests" />
       </label>
-      <label>
-        Phone
-        <input value={phone} onChange={(e) => setPhone(e.target.value)} required />
-      </label>
-      <button type="submit" className="primary">Confirm Appointment</button>
+      {error && <p className="form-error">{error}</p>}
+      <button type="submit" className="primary" disabled={submitting}>
+        {submitting ? 'Booking...' : 'Confirm Appointment'}
+      </button>
     </form>
   )
 }

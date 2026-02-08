@@ -1,43 +1,75 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
-import ProtectedRoute from '../components/ProtectedRoute'
+import { getAppointments, updateAppointment } from '../api/appointments'
+import { getDentists } from '../api/dentists'
 
 export default function PatientDashboard() {
   const { user } = useAuth()
   const [appts, setAppts] = useState([])
+  const [dentists, setDentists] = useState([])
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const allAppts = JSON.parse(localStorage.getItem('gayatri_appointments') || '[]')
-    // Filter by patient name
-    const myAppts = allAppts.filter(a => a.patientName === user?.name)
-    setAppts(myAppts)
-  }, [user?.name])
+    let active = true
+    if (!user) return
+    Promise.all([getAppointments(), getDentists()])
+      .then(([appointmentsData, dentistsData]) => {
+        if (!active) return
+        const mine = (appointmentsData || []).filter((a) => a.patientId === Number(user.patientId))
+        setAppts(mine)
+        setDentists(dentistsData || [])
+      })
+      .catch((err) => {
+        if (active) setError(err.message || 'Unable to load appointments.')
+      })
+      .finally(() => {
+        if (active) setLoading(false)
+      })
+    return () => {
+      active = false
+    }
+  }, [user])
 
-  function cancelAppt(id) {
-    const updated = appts.map(a => a.id === id ? { ...a, status: 'CANCELLED' } : a)
-    setAppts(updated)
-    const allAppts = JSON.parse(localStorage.getItem('gayatri_appointments') || '[]')
-    const updatedAll = allAppts.map(a => a.id === id ? { ...a, status: 'CANCELLED' } : a)
-    localStorage.setItem('gayatri_appointments', JSON.stringify(updatedAll))
+  const dentistById = useMemo(() => {
+    const map = new Map()
+    dentists.forEach((d) => map.set(d.id, d))
+    return map
+  }, [dentists])
+
+  async function cancelAppt(appt) {
+    try {
+      const updated = await updateAppointment(appt.id, {
+        patientId: appt.patientId,
+        dentistId: appt.dentistId,
+        appointmentDate: appt.appointmentDate,
+        appointmentTime: appt.appointmentTime,
+        status: 'CANCELLED',
+        remarks: appt.remarks || null,
+      })
+      setAppts((prev) => prev.map((a) => (a.id === appt.id ? updated : a)))
+    } catch (err) {
+      alert(err.message || 'Unable to cancel appointment.')
+    }
   }
 
   return (
-    <ProtectedRoute allowedRoles={['PATIENT']}>
-      <section className="patient-dashboard">
-        <h2>Patient Dashboard</h2>
-        <p>Welcome, {user?.name}!</p>
+    <section className="patient-dashboard">
+      <h2>Patient Dashboard</h2>
+      <p>Welcome, {user?.name}!</p>
 
-        <h3>Your Appointments</h3>
-        {appts.length === 0 && <p>No appointments booked. <a href="/book">Book now</a></p>}
-        <ul>
-          {appts.map(a => (
-            <li key={a.id} className={a.status === 'CANCELLED' ? 'muted' : ''}>
-              <strong>{a.doctorName}</strong> — {a.date} {a.time} ({a.status})
-              {a.status !== 'CANCELLED' && <button onClick={() => cancelAppt(a.id)}>Cancel</button>}
-            </li>
-          ))}
-        </ul>
-      </section>
-    </ProtectedRoute>
+      <h3>Your Appointments</h3>
+      {loading && <p>Loading...</p>}
+      {error && <p className="form-error">{error}</p>}
+      {!loading && appts.length === 0 && <p>No appointments booked. <a href="/book">Book now</a></p>}
+      <ul>
+        {appts.map((a) => (
+          <li key={a.id} className={a.status === 'CANCELLED' ? 'muted' : ''}>
+            <strong>{dentistById.get(a.dentistId)?.name || `Dentist #${a.dentistId}`}</strong> — {a.appointmentDate} {a.appointmentTime} ({a.status})
+            {a.status !== 'CANCELLED' && <button onClick={() => cancelAppt(a)}>Cancel</button>}
+          </li>
+        ))}
+      </ul>
+    </section>
   )
 }

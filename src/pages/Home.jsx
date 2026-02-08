@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import Hero from '../assets/image.png'
 
 function ServiceCard({ title, desc }) {
   return (
@@ -12,6 +11,7 @@ function ServiceCard({ title, desc }) {
 
 export default function Home() {
   const [form, setForm] = useState({ name: '', phone: '', message: '' })
+  const heroImage = '/images/dental-clinic-hero.jpg'
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -27,12 +27,37 @@ export default function Home() {
     <>
       <section className="hero">
         <div className="hero-content">
-          <h2>Your trusted family dentist</h2>
-          <p>Preventive, cosmetic and restorative dentistry with gentle care.</p>
-          <a href="#contact" className="primary">Book an appointment</a>
+          <div className="hero-badges">
+            <span className="hero-badge">Gentle Care Promise</span>
+            <span className="hero-badge">Modern Equipment</span>
+            <span className="hero-badge">Same-Day Relief</span>
+          </div>
+          <h2>Your most confident smile starts here.</h2>
+          <p>Preventive, cosmetic and restorative dentistry with a calm, welcoming experience for the whole family.</p>
+          <div className="hero-actions">
+            <a href="/book" className="primary">Book an appointment</a>
+            <a href="#contact" className="secondary">Ask a question</a>
+          </div>
         </div>
-        <div className="hero-image">
-          <img src={Hero} alt="Dentist caring for patient" />
+        <div className="hero-visual">
+          <div className="photo-main">
+            <img src={heroImage} alt="Dental clinic interior" />
+          </div>
+        </div>
+      </section>
+
+      <section className="trust-strip">
+        <div className="trust-card">
+          <h4>20+ Years of Care</h4>
+          <p>Trusted by generations of families in the community.</p>
+        </div>
+        <div className="trust-card">
+          <h4>Comfort-First Visits</h4>
+          <p>Calm rooms, gentle treatment, and transparent plans.</p>
+        </div>
+        <div className="trust-card">
+          <h4>Flexible Scheduling</h4>
+          <p>Morning and evening appointments to fit your day.</p>
         </div>
       </section>
 
@@ -43,6 +68,50 @@ export default function Home() {
           <ServiceCard title="Cosmetic Dentistry" desc="Teeth whitening, veneers, smile makeovers." />
           <ServiceCard title="Restorative Care" desc="Crowns, bridges, implants and dentures." />
           <ServiceCard title="Orthodontics" desc="Clear aligners and braces for all ages." />
+        </div>
+      </section>
+
+      <section className="signature">
+        <div className="signature-panel">
+          <h2>Signature Care Experience</h2>
+          <p>Every visit is designed to feel reassuring, modern, and personalized.</p>
+          <ul>
+            <li>Care plans built around your goals and budget.</li>
+            <li>Digital diagnostics for accurate treatment.</li>
+            <li>Friendly follow-ups so you never feel alone.</li>
+          </ul>
+        </div>
+        <div className="signature-panel">
+          <h2>Family-Friendly Atmosphere</h2>
+          <p>We make kids and adults feel at ease from the moment you arrive.</p>
+          <ul>
+            <li>Warm welcome with clear next steps.</li>
+            <li>Relaxed, clean, and well-lit treatment rooms.</li>
+            <li>Trusted care for every age and smile.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section className="gallery">
+        <h2>Smile Moments</h2>
+        <p>Bright spaces and friendly faces that keep patients coming back.</p>
+        <div className="gallery-grid">
+          <div className="gallery-card">
+            <img src={heroImage} alt="Comfortable dental chair" />
+            <div className="caption">Comfort-first operatories</div>
+          </div>
+          <div className="gallery-card">
+            <img src={heroImage} alt="Smiling patient" />
+            <div className="caption">Modern tools & hygiene</div>
+          </div>
+          <div className="gallery-card">
+            <img src={heroImage} alt="Welcoming clinic" />
+            <div className="caption">A warm welcome every visit</div>
+          </div>
+          <div className="gallery-card">
+            <img src={heroImage} alt="Happy patient" />
+            <div className="caption">Smiles that last</div>
+          </div>
         </div>
       </section>
 

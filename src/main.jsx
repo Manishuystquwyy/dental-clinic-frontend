@@ -16,8 +16,10 @@ import Book from './pages/Book'
 import Appointments from './pages/Appointments'
 import DoctorDashboard from './pages/DoctorDashboard'
 import PatientDashboard from './pages/PatientDashboard'
+import MyProfile from './pages/MyProfile'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import ProtectedRoute from './components/ProtectedRoute'
 import AdminLogin from './admin/Login'
 import AdminDashboard from './admin/Dashboard'
 import DoctorsManager from './admin/DoctorsManager'
@@ -39,9 +41,31 @@ createRoot(document.getElementById('root')).render(
             <Route path="testimonials" element={<Testimonials />} />
             <Route path="gallery" element={<Gallery />} />
             <Route path="book" element={<Book />} />
-            <Route path="appointments" element={<Appointments />} />
+            <Route
+              path="appointments"
+              element={(
+                <ProtectedRoute allowedRoles={['PATIENT']}>
+                  <Appointments />
+                </ProtectedRoute>
+              )}
+            />
             <Route path="doctor-dashboard" element={<DoctorDashboard />} />
-            <Route path="patient-dashboard" element={<PatientDashboard />} />
+            <Route
+              path="patient-dashboard"
+              element={(
+                <ProtectedRoute allowedRoles={['PATIENT']}>
+                  <PatientDashboard />
+                </ProtectedRoute>
+              )}
+            />
+            <Route
+              path="my-profile"
+              element={(
+                <ProtectedRoute allowedRoles={['PATIENT']}>
+                  <MyProfile />
+                </ProtectedRoute>
+              )}
+            />
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
             <Route path="admin/login" element={<AdminLogin />} />

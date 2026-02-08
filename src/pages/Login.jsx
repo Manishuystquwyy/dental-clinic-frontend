@@ -1,19 +1,30 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [role, setRole] = useState('PATIENT')
+  const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
   const { login } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  const redirectTo = location.state?.from?.pathname || '/'
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
-    login(email, password, role)
-    alert(`Logged in as ${role}!`)
-    navigate('/')
+    setError('')
+    setSubmitting(true)
+    try {
+      await login(email, password)
+      alert('Logged in successfully!')
+      navigate(redirectTo)
+    } catch (err) {
+      setError(err.message || 'Login failed.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -31,16 +42,10 @@ export default function Login() {
           <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
         </label>
 
-        <label>
-          Role
-          <select value={role} onChange={(e) => setRole(e.target.value)}>
-            <option value="PATIENT">Patient</option>
-            <option value="DOCTOR">Doctor</option>
-            <option value="ADMIN">Admin</option>
-          </select>
-        </label>
-
-        <button type="submit" className="primary">Login</button>
+        {error && <p className="form-error">{error}</p>}
+        <button type="submit" className="primary" disabled={submitting}>
+          {submitting ? 'Logging in...' : 'Login'}
+        </button>
         <p>
           Don't have an account? <a href="/signup">Sign up</a>
         </p>
