@@ -11,7 +11,6 @@ import DoctorProfile from './pages/DoctorProfile'
 import Services from './pages/Services'
 import Contact from './pages/Contact'
 import Testimonials from './pages/Testimonials'
-import Gallery from './pages/Gallery'
 import Book from './pages/Book'
 import Appointments from './pages/Appointments'
 import DoctorDashboard from './pages/DoctorDashboard'
@@ -39,7 +38,6 @@ createRoot(document.getElementById('root')).render(
             <Route path="services" element={<Services />} />
             <Route path="contact" element={<Contact />} />
             <Route path="testimonials" element={<Testimonials />} />
-            <Route path="gallery" element={<Gallery />} />
             <Route path="book" element={<Book />} />
             <Route
               path="appointments"

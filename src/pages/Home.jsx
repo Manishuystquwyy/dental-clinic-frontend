@@ -72,7 +72,7 @@ export default function Home() {
       </section>
 
       <section className="signature">
-        <div className="signature-panel">
+        <div className="signature-panel signature-panel-featured">
           <h2>Signature Care Experience</h2>
           <p>Every visit is designed to feel reassuring, modern, and personalized.</p>
           <ul>
@@ -81,7 +81,7 @@ export default function Home() {
             <li>Friendly follow-ups so you never feel alone.</li>
           </ul>
         </div>
-        <div className="signature-panel">
+        <div className="signature-panel signature-panel-family">
           <h2>Family-Friendly Atmosphere</h2>
           <p>We make kids and adults feel at ease from the moment you arrive.</p>
           <ul>
@@ -89,29 +89,6 @@ export default function Home() {
             <li>Relaxed, clean, and well-lit treatment rooms.</li>
             <li>Trusted care for every age and smile.</li>
           </ul>
-        </div>
-      </section>
-
-      <section className="gallery">
-        <h2>Smile Moments</h2>
-        <p>Bright spaces and friendly faces that keep patients coming back.</p>
-        <div className="gallery-grid">
-          <div className="gallery-card">
-            <img src={heroImage} alt="Comfortable dental chair" />
-            <div className="caption">Comfort-first operatories</div>
-          </div>
-          <div className="gallery-card">
-            <img src={heroImage} alt="Smiling patient" />
-            <div className="caption">Modern tools & hygiene</div>
-          </div>
-          <div className="gallery-card">
-            <img src={heroImage} alt="Welcoming clinic" />
-            <div className="caption">A warm welcome every visit</div>
-          </div>
-          <div className="gallery-card">
-            <img src={heroImage} alt="Happy patient" />
-            <div className="caption">Smiles that last</div>
-          </div>
         </div>
       </section>
 
@@ -152,8 +129,9 @@ export default function Home() {
 
           <div className="contact-info">
             <h3>Gayatri Dental Clinic</h3>
-            <p>123 Main Street, Your City</p>
-            <p>Phone: +91 98765 43210</p>
+            <p>1st Floor, Pillar No: 44, Near Union Bank,</p>
+            <p>Kurthaul, Patna</p>
+            <p>Phone: +91 7739280958</p>
             <p>Email: info@gayatridental.com</p>
           </div>
         </div>

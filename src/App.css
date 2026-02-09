@@ -11,31 +11,55 @@
 
 .site-header {
   position: sticky;
-  top: 0;
+  top: 1rem;
   z-index: 20;
   backdrop-filter: blur(14px);
-  background: rgba(247, 243, 239, 0.85);
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 0.9rem 1.25rem;
-  margin-bottom: 1.5rem;
+  background: rgba(249, 246, 241, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 22px;
+  padding: 0.95rem 1.35rem;
+  margin-bottom: 1.75rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  box-shadow: 0 8px 22px rgba(27, 27, 27, 0.08);
+  box-shadow: 0 18px 38px rgba(27, 27, 27, 0.12);
 }
 
 .brand { display: flex; align-items: center; gap: 0.75rem; }
-.brand img { width: 56px; height:56px; border-radius: 14px; object-fit: cover; box-shadow: 0 6px 14px rgba(0,0,0,0.08) }
-.brand-text h1 { margin: 0; font-size: 1.35rem; }
+.brand img { width: 58px; height:58px; border-radius: 16px; object-fit: cover; box-shadow: 0 10px 20px rgba(0,0,0,0.12) }
+.brand-text h1 { margin: 0; font-size: 1.4rem; }
 .brand-text p { margin: 0; color: var(--muted); font-size: 0.85rem }
 
 .nav { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap }
-.nav a { color: var(--ink); text-decoration: none; padding: 0.4rem 0.75rem; border-radius: 999px; font-size: 0.95rem; border: 1px solid transparent }
-.nav a:hover { border-color: var(--border); background: #fff }
-.nav .cta { background: var(--accent); color: white; border-color: var(--accent) }
-.nav .cta:hover { background: #b1552e; border-color: #b1552e }
+.nav a { color: var(--ink); text-decoration: none; padding: 0.45rem 0.85rem; border-radius: 999px; font-size: 0.95rem; border: 1px solid transparent; transition: 0.2s ease }
+.nav a:hover { border-color: rgba(208, 106, 58, 0.25); background: rgba(255, 255, 255, 0.7) }
+.nav .cta { background: var(--accent); color: white; border-color: var(--accent); box-shadow: 0 10px 20px rgba(208, 106, 58, 0.28) }
+.nav .cta:hover { background: #b4572f; border-color: #b4572f }
+
+.nav-toggle {
+  display: none;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(208, 106, 58, 0.25);
+  border-radius: 999px;
+  padding: 0.55rem 0.6rem;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(27, 27, 27, 0.12);
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex-direction: row;
+  transform: rotate(90deg);
+}
+.nav-toggle span {
+  display: block;
+  width: 2px;
+  height: 18px;
+  background: var(--ink);
+  margin: 0;
+  border-radius: 999px;
+  transition: 0.2s ease;
+}
 
 .primary, .cta {
   display: inline-flex;
@@ -50,8 +74,10 @@
   text-decoration: none;
   cursor: pointer;
   font-weight: 600;
-  box-shadow: 0 12px 24px rgba(200, 100, 59, 0.25);
+  box-shadow: 0 16px 28px rgba(208, 106, 58, 0.28);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+.primary:hover, .cta:hover { transform: translateY(-1px); box-shadow: 0 18px 32px rgba(208, 106, 58, 0.3) }
 
 .secondary {
   display: inline-flex;
@@ -64,21 +90,23 @@
   background: #fff;
   color: var(--ink);
   font-weight: 600;
+  transition: 0.2s ease;
 }
+.secondary:hover { border-color: rgba(15, 111, 111, 0.35); color: var(--accent-2) }
 
 .hero {
   display: grid;
   grid-template-columns: 1.2fr 1fr;
   gap: 2rem;
   align-items: center;
-  padding: 1.5rem 0 2.5rem;
+  padding: 1.75rem 0 2.75rem;
 }
 
-.hero-content h2 { margin: 0 0 0.75rem 0; font-size: 2.8rem; }
-.hero-content p { margin: 0 0 1.5rem 0; color: var(--muted); font-size: 1.05rem }
+.hero-content h2 { margin: 0 0 0.75rem 0; font-size: 3.1rem; line-height: 1.05 }
+.hero-content p { margin: 0 0 1.5rem 0; color: var(--muted); font-size: 1.08rem }
 
 .hero-badges { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem }
-.hero-badge { background: #fff; border: 1px solid var(--border); padding: 0.3rem 0.75rem; border-radius: 999px; font-size: 0.85rem; color: var(--muted) }
+.hero-badge { background: rgba(255, 255, 255, 0.9); border: 1px solid rgba(208, 106, 58, 0.18); padding: 0.35rem 0.85rem; border-radius: 999px; font-size: 0.85rem; color: var(--muted) }
 
 .hero-actions { display: flex; gap: 0.8rem; flex-wrap: wrap }
 
@@ -89,7 +117,7 @@
 }
 
 .hero-visual .photo-main {
-  border-radius: 24px;
+  border-radius: 26px;
   overflow: hidden;
   box-shadow: var(--shadow);
   border: 1px solid #fff;
@@ -101,10 +129,11 @@
   bottom: -10px;
   width: 140px;
   background: #fff;
-  border-radius: 18px;
+  border-radius: 20px;
   padding: 0.5rem;
-  box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+  box-shadow: 0 16px 30px rgba(0,0,0,0.14);
   border: 1px solid var(--border);
+  animation: float 6s ease-in-out infinite;
 }
 
 .hero-visual .photo-float {
@@ -112,12 +141,13 @@
   left: -16px;
   top: -14px;
   width: 160px;
-  border-radius: 18px;
+  border-radius: 20px;
   padding: 0;
   overflow: hidden;
-  box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+  box-shadow: 0 16px 30px rgba(0,0,0,0.14);
   border: 1px solid var(--border);
   background: #fff;
+  animation: float 7s ease-in-out infinite;
 }
 .hero-visual .photo-float img {
   width: 100%;
@@ -133,36 +163,243 @@
 }
 
 .trust-card {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.92);
   border-radius: var(--radius);
-  padding: 1rem 1.1rem;
-  border: 1px solid var(--border);
-  box-shadow: 0 12px 28px rgba(27, 27, 27, 0.08);
+  padding: 1.1rem 1.2rem;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 16px 34px rgba(27, 27, 27, 0.1);
+  animation: fadeUp 0.6s ease both;
 }
 
 .trust-card h4 { margin: 0 0 0.4rem 0; font-size: 1.1rem }
 .trust-card p { margin: 0; color: var(--muted); font-size: 0.95rem }
 
 .services { padding: 2rem 0 }
-.services-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 1rem; margin-top: 1rem }
-.service-card { padding: 1rem; border-radius: var(--radius); border: 1px solid var(--border); background: #fff; box-shadow: 0 12px 28px rgba(27, 27, 27, 0.06) }
-.service-card h3 { margin: 0 0 0.5rem 0 }
-.service-card p { margin: 0; color: var(--muted) }
+.section-head { display: grid; gap: 0.4rem; margin-bottom: 1.1rem }
+.section-head h2 { margin: 0 }
+.section-head p { margin: 0; color: var(--muted) }
+.services-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 1rem }
+.service-card {
+  padding: 1.2rem 1.25rem;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,255,255,0.88));
+  box-shadow: 0 16px 30px rgba(27, 27, 27, 0.1);
+  animation: fadeUp 0.6s ease both;
+}
+.service-card-featured {
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0.6), rgba(10, 10, 10, 0.25)),
+    url('/images/service1.png') center/cover no-repeat;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.service-card-featured .service-what,
+.service-card-featured .service-why,
+.service-card-featured h3 {
+  color: #ffffff;
+}
+.service-card-featured .service-why { opacity: 0.9 }
+.service-card-cleaning {
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0.55), rgba(10, 10, 10, 0.2)),
+    url('/images/service2.png') center/cover no-repeat;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.service-card-cleaning .service-what,
+.service-card-cleaning .service-why,
+.service-card-cleaning h3 {
+  color: #ffffff;
+}
+.service-card-cleaning .service-why { opacity: 0.9 }
+.service-card-filling {
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0.55), rgba(10, 10, 10, 0.2)),
+    url('/images/service3.png') center/cover no-repeat;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.service-card-filling .service-what,
+.service-card-filling .service-why,
+.service-card-filling h3 {
+  color: #ffffff;
+}
+.service-card-filling .service-why { opacity: 0.9 }
+.service-card-rct {
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0.55), rgba(10, 10, 10, 0.2)),
+    url('/images/service4.png') center/cover no-repeat;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.service-card-rct .service-what,
+.service-card-rct .service-why,
+.service-card-rct h3 { color: #ffffff; }
+.service-card-rct .service-why { opacity: 0.9 }
+
+.service-card-extraction {
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0.55), rgba(10, 10, 10, 0.2)),
+    url('/images/service5.png') center/cover no-repeat;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.service-card-extraction .service-what,
+.service-card-extraction .service-why,
+.service-card-extraction h3 { color: #ffffff; }
+.service-card-extraction .service-why { opacity: 0.9 }
+
+.service-card-crowns {
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0.55), rgba(10, 10, 10, 0.2)),
+    url('/images/service6.png') center/cover no-repeat;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.service-card-crowns .service-what,
+.service-card-crowns .service-why,
+.service-card-crowns h3 { color: #ffffff; }
+.service-card-crowns .service-why { opacity: 0.9 }
+
+.service-card-implants {
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0.55), rgba(10, 10, 10, 0.2)),
+    url('/images/service7.png') center/cover no-repeat;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.service-card-implants .service-what,
+.service-card-implants .service-why,
+.service-card-implants h3 { color: #ffffff; }
+.service-card-implants .service-why { opacity: 0.9 }
+
+.service-card-whitening {
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0.55), rgba(10, 10, 10, 0.2)),
+    url('/images/service8.png') center/cover no-repeat;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.service-card-whitening .service-what,
+.service-card-whitening .service-why,
+.service-card-whitening h3 { color: #ffffff; }
+.service-card-whitening .service-why { opacity: 0.9 }
+
+.service-card-ortho {
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0.55), rgba(10, 10, 10, 0.2)),
+    url('/images/service9.png') center/cover no-repeat;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.service-card-ortho .service-what,
+.service-card-ortho .service-why,
+.service-card-ortho h3 { color: #ffffff; }
+.service-card-ortho .service-why { opacity: 0.9 }
+
+.service-card-gum {
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0.55), rgba(10, 10, 10, 0.2)),
+    url('/images/service10.png') center/cover no-repeat;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.service-card-gum .service-what,
+.service-card-gum .service-why,
+.service-card-gum h3 { color: #ffffff; }
+.service-card-gum .service-why { opacity: 0.9 }
+
+.service-card-pediatric {
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0.55), rgba(10, 10, 10, 0.2)),
+    url('/images/service11.png') center/cover no-repeat;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.service-card-pediatric .service-what,
+.service-card-pediatric .service-why,
+.service-card-pediatric h3 { color: #ffffff; }
+.service-card-pediatric .service-why { opacity: 0.9 }
+
+.service-card-dentures {
+  background:
+    linear-gradient(180deg, rgba(10, 10, 10, 0.55), rgba(10, 10, 10, 0.2)),
+    url('/images/service12.png') center/cover no-repeat;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.service-card-dentures .service-what,
+.service-card-dentures .service-why,
+.service-card-dentures h3 { color: #ffffff; }
+.service-card-dentures .service-why { opacity: 0.9 }
+.service-card h3 { margin: 0 0 0.6rem 0; font-size: 1.05rem }
+.service-card p { margin: 0; color: var(--muted); font-size: 0.94rem }
+.service-what { margin-bottom: 0.5rem }
+.service-why { color: #4f4a45 }
 
 .signature {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
-  align-items: center;
+  align-items: stretch;
   padding: 2rem 0;
 }
 
 .signature-panel {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 1.5rem;
-  box-shadow: 0 16px 30px rgba(27, 27, 27, 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid rgba(255,255,255,0.65);
+  border-radius: 22px;
+  padding: 1.6rem;
+  box-shadow: 0 18px 34px rgba(27, 27, 27, 0.12);
+}
+.signature-panel-featured {
+  background:
+    linear-gradient(180deg, rgba(5, 5, 5, 0.85), rgba(5, 5, 5, 0.55)),
+    url('/images/service1.png') center 20%/cover no-repeat;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.signature-panel-featured h2,
+.signature-panel-featured p,
+.signature-panel-featured li,
+.signature-panel-featured ul li {
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+.signature-panel-featured li { opacity: 1 }
+
+.signature-panel-family {
+  background:
+    linear-gradient(180deg, rgba(5, 5, 5, 0.85), rgba(5, 5, 5, 0.55)),
+    url('/images/service11.png') center 20%/cover no-repeat;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.signature-panel-family h2,
+.signature-panel-family p,
+.signature-panel-family li,
+.signature-panel-family ul li {
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+}
+.signature-panel-family li { opacity: 1 }
+
+.signature-points {
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 12px;
+  padding: 0.75rem 0.9rem;
+  margin-top: 0.9rem;
+}
+
+.signature-points p {
+  margin: 0.35rem 0;
+  color: #ffffff !important;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.6);
 }
 
 .signature-panel ul { margin: 1rem 0 0 0; padding: 0; list-style: none }
@@ -180,11 +417,12 @@
 }
 
 .gallery-card {
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 18px;
+  background: rgba(255,255,255,0.94);
+  border: 1px solid rgba(255,255,255,0.7);
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 12px 26px rgba(27, 27, 27, 0.08);
+  box-shadow: 0 16px 30px rgba(27, 27, 27, 0.1);
+  animation: fadeUp 0.6s ease both;
 }
 
 .gallery-card img { width: 100%; height: 180px; object-fit: cover }
@@ -192,32 +430,66 @@
 
 .about, .testimonials, .contact { padding: 1.5rem 0 }
 .test-grid { display: grid; gap: 1rem }
-blockquote { background: #fff; padding: 1rem; border-left: 4px solid var(--accent); margin: 0; border-radius: 12px }
+blockquote { background: rgba(255,255,255,0.92); padding: 1rem; border-left: 4px solid var(--accent); margin: 0; border-radius: 14px }
 
 .contact-grid { display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem }
 .contact-form label { display: block; margin-bottom: 0.75rem }
 .contact-form input, .contact-form textarea { width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 10px }
 .contact-form textarea { min-height: 100px }
-.contact-info { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1rem; box-shadow: 0 12px 24px rgba(27,27,27,0.06) }
+.contact-info {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.1rem 1.2rem;
+  box-shadow: 0 10px 18px rgba(27, 27, 27, 0.06);
+}
 
-.site-footer { padding: 1.5rem 0; text-align: center; color: var(--muted); border-top: 1px solid var(--border); margin-top: 2rem }
+.contact-info h3 {
+  margin-top: 0;
+  font-size: 1.15rem;
+}
+
+.contact-info p {
+  margin: 0.35rem 0;
+  color: var(--muted);
+}
+
+.site-footer { padding: 1.75rem 0; text-align: center; color: var(--muted); border-top: 1px solid rgba(255,255,255,0.6); margin-top: 2rem }
 
 @media (max-width: 980px) {
   .hero { grid-template-columns: 1fr; }
   .signature { grid-template-columns: 1fr; }
   .contact-grid { grid-template-columns: 1fr; }
-  .nav { display: none }
+  .nav-toggle { display: inline-flex; align-items: center; justify-content: center; }
+  .nav {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    right: 1rem;
+    left: 1rem;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    padding: 0.9rem;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+    box-shadow: 0 18px 36px rgba(27, 27, 27, 0.12);
+  }
+  .nav.open { display: flex; }
+  .nav a { text-align: center; }
 }
 
 /* Booking & doctors */
 .booking-grid { display: grid; grid-template-columns: 320px 1fr; gap: 1rem }
 .doctors-list { display: grid; gap: 0.75rem }
-.doctor-card { padding: 0.8rem; border-radius: 12px; border: 1px solid var(--border); background: #fff; display:flex; justify-content:space-between; align-items:center; box-shadow: 0 10px 20px rgba(27,27,27,0.06) }
+.doctor-card { padding: 0.85rem; border-radius: 14px; border: 1px solid rgba(255,255,255,0.7); background: rgba(255,255,255,0.95); display:flex; justify-content:space-between; align-items:center; box-shadow: 0 14px 26px rgba(27,27,27,0.08) }
 .doctor-card h3 { margin: 0; font-size: 1rem }
 .doctor-card p { margin: 0; color: var(--muted); font-size: 0.85rem }
 .doctor-card button { padding: 0.35rem 0.6rem; border-radius: 999px; background:var(--accent); color:#fff; border:none }
 
-.booking-panel { padding: 1rem; border-radius:16px; border:1px solid var(--border); background: #fff; box-shadow: 0 12px 24px rgba(27,27,27,0.06) }
+.booking-panel { padding: 1.1rem; border-radius:18px; border:1px solid rgba(255,255,255,0.7); background: rgba(255,255,255,0.96); box-shadow: 0 16px 30px rgba(27,27,27,0.1) }
 .times { display:flex; gap:0.5rem; flex-wrap:wrap; margin:0.5rem 0 }
 .times button { padding:0.4rem 0.6rem; border-radius:999px; border:1px solid var(--border); background:#faf7f3 }
 .times button.active { background:var(--accent-2); color:#fff; border-color: var(--accent-2) }
@@ -322,11 +594,11 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 /* Doctor profile */
 .doctor-profile { display:grid; grid-template-columns: 1fr 360px; gap:1rem }
-.doctor-profile .bio { padding:1rem; background:#fff; border:1px solid var(--border); border-radius:16px; box-shadow: 0 12px 24px rgba(27,27,27,0.06) }
+.doctor-profile .bio { padding:1.1rem; background: rgba(255,255,255,0.96); border:1px solid rgba(255,255,255,0.7); border-radius:18px; box-shadow: 0 16px 30px rgba(27,27,27,0.1) }
 
 /* Auth pages */
 .auth-page { display: flex; justify-content: center; padding: 2rem }
-.auth-form { width: 100%; max-width: 380px; padding: 1.5rem; border-radius: 16px; border: 1px solid var(--border); background: #fff; box-shadow: 0 12px 24px rgba(27,27,27,0.06) }
+.auth-form { width: 100%; max-width: 380px; padding: 1.6rem; border-radius: 18px; border: 1px solid rgba(255,255,255,0.7); background: rgba(255,255,255,0.96); box-shadow: 0 16px 30px rgba(27,27,27,0.1) }
 .auth-form h2 { margin-top: 0 }
 .auth-form label { display: block; margin-bottom: 1rem }
 .auth-form input, .auth-form select { width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 10px }
@@ -349,32 +621,61 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 /* Admin pages */
 .manager-page { padding: 1rem 0 }
-.manager-form { padding: 1.5rem; background: #fff; border: 1px solid var(--border); border-radius: 16px; margin-bottom: 1.5rem }
+.manager-form { padding: 1.6rem; background: rgba(255,255,255,0.96); border: 1px solid rgba(255,255,255,0.7); border-radius: 18px; margin-bottom: 1.5rem }
 .manager-form h3 { margin-top: 0 }
 .manager-form input, .manager-form textarea { display: block; width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 0.75rem; font-family: inherit }
 .manager-form button { margin-right: 0.5rem }
 
 .manager-table { width: 100%; border-collapse: collapse; margin-bottom: 1rem }
 .manager-table th, .manager-table td { text-align: left; padding: 0.75rem; border: 1px solid var(--border) }
-.manager-table th { background: #f9f5f0; font-weight: bold }
+.manager-table th { background: #f7f0e7; font-weight: bold }
 .manager-table button { padding: 0.35rem 0.6rem; border-radius: 999px; border: none; background: var(--accent); color: #fff; cursor: pointer; margin-right: 0.5rem }
 .manager-table button:hover { background: #b1552e }
 
 /* Admin/Doctor/Patient dashboards */
 .admin-dashboard, .doctor-dashboard, .patient-dashboard { padding: 1rem 0 }
 .admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1rem }
-.admin-card { padding: 1.5rem; background: #fff; border: 1px solid var(--border); border-radius: 16px; text-decoration: none; color: var(--ink); transition: 0.2s; box-shadow: 0 12px 24px rgba(27,27,27,0.06) }
+.admin-card { padding: 1.6rem; background: rgba(255,255,255,0.96); border: 1px solid rgba(255,255,255,0.7); border-radius: 18px; text-decoration: none; color: var(--ink); transition: 0.2s; box-shadow: 0 16px 30px rgba(27,27,27,0.1) }
 .admin-card:hover { border-color: var(--accent); box-shadow: 0 18px 30px rgba(200,100,59,0.18) }
 .admin-card h3 { margin: 0 0 0.5rem 0 }
 .admin-card p { margin: 0; color: var(--muted); font-size: 0.9rem }
 
 .doctor-dashboard ul, .patient-dashboard ul { list-style: none; padding: 0 }
-.doctor-dashboard li, .patient-dashboard li { padding: 0.75rem; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center; background: #fff }
+.doctor-dashboard li, .patient-dashboard li { padding: 0.8rem; border: 1px solid rgba(255,255,255,0.7); border-radius: 14px; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.95) }
 .doctor-dashboard li.muted, .patient-dashboard li.muted { opacity: 0.6 }
 .doctor-dashboard button, .patient-dashboard button { padding: 0.35rem 0.6rem; border-radius: 999px; border: none; background: #d94b4b; color: #fff; cursor: pointer }
 
 /* Profile */
 .profile-page { padding: 1rem 0 }
-.profile-form { max-width: 520px; background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 1.25rem; box-shadow: 0 12px 24px rgba(27,27,27,0.06) }
+.profile-form { max-width: 520px; background: rgba(255,255,255,0.96); border: 1px solid rgba(255,255,255,0.7); border-radius: 18px; padding: 1.35rem; box-shadow: 0 16px 30px rgba(27,27,27,0.1) }
+
+.trust-card:nth-child(2),
+.service-card:nth-child(2),
+.gallery-card:nth-child(2),
+.admin-card:nth-child(2) { animation-delay: 0.08s }
+
+.trust-card:nth-child(3),
+.service-card:nth-child(3),
+.gallery-card:nth-child(3),
+.admin-card:nth-child(3) { animation-delay: 0.16s }
+
+.trust-card:nth-child(4),
+.service-card:nth-child(4),
+.gallery-card:nth-child(4),
+.admin-card:nth-child(4) { animation-delay: 0.24s }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
 .profile-form label { display: block; margin-bottom: 0.9rem }
 .profile-form input { width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 10px }
