@@ -18,6 +18,8 @@ import PatientDashboard from './pages/PatientDashboard'
 import MyProfile from './pages/MyProfile'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import ForgotPassword from './pages/ForgotPassword'
+import ResetPassword from './pages/ResetPassword'
 import ProtectedRoute from './components/ProtectedRoute'
 import AdminLogin from './admin/Login'
 import AdminDashboard from './admin/Dashboard'
@@ -65,6 +67,8 @@ createRoot(document.getElementById('root')).render(
               )}
             />
             <Route path="login" element={<Login />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="reset-password" element={<ResetPassword />} />
             <Route path="signup" element={<Signup />} />
             <Route path="admin/login" element={<AdminLogin />} />
             <Route path="admin" element={<AdminDashboard />} />
