@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import AppointmentForm from '../components/AppointmentForm'
 import { getDentist } from '../api/dentists'
 import DatePicker from '../components/DatePicker'
+import { resolvePictureUrl } from '../utils/media'
 
 export default function DoctorProfile() {
   const { id } = useParams()
@@ -35,10 +36,27 @@ export default function DoctorProfile() {
   return (
     <section className="doctor-profile">
       <div className="bio">
-        <h2>{doc.name}</h2>
-        <p><strong>Experience:</strong> {doc.experienceYears} years</p>
-        <p><strong>Phone:</strong> {doc.phone}</p>
-        <p><strong>Email:</strong> {doc.email}</p>
+        <div className="doctor-hero">
+          <div className="doctor-photo doctor-photo-lg" aria-hidden={!doc.pictureUrl}>
+            <div className="doctor-photo-fallback" aria-hidden="true">
+              {(doc.name || 'Doctor').split(' ').map((s) => s[0]).slice(0, 2).join('').toUpperCase()}
+            </div>
+            {doc.pictureUrl && (
+              <img
+                src={resolvePictureUrl(doc.pictureUrl)}
+                alt={`Dr. ${doc.name}`}
+                loading="lazy"
+                onError={(e) => { e.currentTarget.style.display = 'none' }}
+              />
+            )}
+          </div>
+          <div>
+            <h2>{doc.name}</h2>
+            <p><strong>Experience:</strong> {doc.experienceYears} years</p>
+            <p><strong>Qualification:</strong> {doc.qualification || '—'}</p>
+            <p><strong>Specialization:</strong> {doc.specialization || '—'}</p>
+          </div>
+        </div>
         <hr />
         <h3>Availability</h3>
         <div>
