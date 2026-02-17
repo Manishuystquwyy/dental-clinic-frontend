@@ -66,7 +66,9 @@ export default function PatientDashboard() {
         {appts.map((a) => (
           <li key={a.id} className={a.status === 'CANCELLED' ? 'muted' : ''}>
             <strong>{dentistById.get(a.dentistId)?.name || `Dentist #${a.dentistId}`}</strong> — {a.appointmentDate} {a.appointmentTime} ({a.status})
-            {a.status !== 'CANCELLED' && <button onClick={() => cancelAppt(a)}>Cancel</button>}
+            {a.status !== 'CANCELLED' && a.status !== 'COMPLETED' && (
+              <button onClick={() => cancelAppt(a)}>Cancel</button>
+            )}
           </li>
         ))}
       </ul>
