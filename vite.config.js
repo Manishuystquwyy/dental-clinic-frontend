@@ -12,8 +12,8 @@ export default defineConfig({
   ],
   server: {
     proxy: {
-      '/api': 'http://localhost:8080',
-      '/uploads': 'http://localhost:8080',
+      '/api': 'http://ec2-16-112-64-187.ap-south-2.compute.amazonaws.com:8080',
+      '/uploads': 'http://ec2-16-112-64-187.ap-south-2.compute.amazonaws.com:8080',
     },
   },
 })
