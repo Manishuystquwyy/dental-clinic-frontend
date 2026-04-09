@@ -1,4 +1,20 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
+function resolveApiBaseUrl() {
+  const configuredBaseUrl = import.meta.env.VITE_API_BASE_URL?.trim()
+
+  if (typeof window !== 'undefined') {
+    const isLocalHost = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+
+    // In local dev/preview, talk to the Spring Boot app directly so form submissions
+    // do not depend on a Vite proxy being present.
+    if (isLocalHost && (!configuredBaseUrl || configuredBaseUrl === '/api')) {
+      return 'http://localhost:8080/api'
+    }
+  }
+
+  return configuredBaseUrl || '/api'
+}
+
+const API_BASE_URL = resolveApiBaseUrl()
 
 function getAuthToken() {
   return localStorage.getItem('gayatri_token')
@@ -33,8 +49,14 @@ export async function apiFetch(path, options = {}) {
   }
 
   if (!res.ok) {
+    const validationMessage =
+      data && typeof data === 'object' && !Array.isArray(data)
+        ? Object.values(data).filter(Boolean).join(', ')
+        : ''
+
     const message =
       (typeof data === 'string' ? data : null) ||
+      validationMessage ||
       data?.message ||
       data?.error ||
       res.statusText ||
