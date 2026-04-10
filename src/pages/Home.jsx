@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { createPublicRequest } from '../api/publicRequests'
 
 function ServiceCard({ title, desc }) {
   return (
@@ -11,16 +12,45 @@ function ServiceCard({ title, desc }) {
 
 export default function Home() {
   const [form, setForm] = useState({ name: '', phone: '', message: '' })
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
   const heroImage = '/images/dental-clinic-hero.jpg'
 
   function handleChange(e) {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
-  function handleSubmit(e) {
+  function validateForm() {
+    if (!/^[6-9]\d{9}$/.test(form.phone.trim())) {
+      setError('Phone number must be a valid 10-digit mobile number.')
+      return false
+    }
+    return true
+  }
+
+  async function handleSubmit(e) {
     e.preventDefault()
-    alert('Thanks, ' + (form.name || 'there') + '! We will contact you soon.')
-    setForm({ name: '', phone: '', message: '' })
+    setError('')
+    setSuccess('')
+    if (!validateForm()) return
+    setSubmitting(true)
+
+    try {
+      await createPublicRequest({
+        ...form,
+        phone: form.phone.trim(),
+        name: form.name.trim(),
+        message: form.message.trim(),
+        requestType: 'CONTACT',
+      })
+      setSuccess('Your request has been sent. We will contact you soon.')
+      setForm({ name: '', phone: '', message: '' })
+    } catch (err) {
+      setError(err.message || 'Unable to send your request.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -118,13 +148,26 @@ export default function Home() {
             </label>
             <label>
               Phone
-              <input name="phone" value={form.phone} onChange={handleChange} required />
+              <input
+                name="phone"
+                value={form.phone}
+                onChange={handleChange}
+                inputMode="numeric"
+                pattern="[6-9][0-9]{9}"
+                maxLength="10"
+                title="Enter a valid 10-digit mobile number"
+                required
+              />
             </label>
             <label>
               Message
-              <textarea name="message" value={form.message} onChange={handleChange} />
+              <textarea name="message" value={form.message} onChange={handleChange} required />
             </label>
-            <button type="submit" className="primary">Send Request</button>
+            {error && <p className="form-error">{error}</p>}
+            {success && <p className="form-success">{success}</p>}
+            <button type="submit" className="primary" disabled={submitting}>
+              {submitting ? 'Sending...' : 'Send Request'}
+            </button>
           </form>
 
           <div className="contact-info">

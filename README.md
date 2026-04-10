@@ -16,3 +16,16 @@ Note: This will impact Vite dev & build performances.
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+## API Configuration
+
+This frontend uses `VITE_API_BASE_URL` to decide which backend to call.
+
+- Local development: [`.env.development`](/Users/manishkumar/Desktop/App/INT-1/dental-clinic-frontend/.env.development) keeps requests on `/api`, and `src/api/client.js` falls back to `http://localhost:8080/api` when running on localhost.
+- Production build: [`.env.production`](/Users/manishkumar/Desktop/App/INT-1/dental-clinic-frontend/.env.production) points to `https://api.gayatridental.com/api`.
+
+Deploy flow:
+
+1. Run `npm run build`.
+2. Deploy the generated `dist/` folder to the frontend host.
+3. Make sure the backend CORS config includes the deployed frontend origin, for example `https://gayatridental.com` and `https://www.gayatridental.com`.

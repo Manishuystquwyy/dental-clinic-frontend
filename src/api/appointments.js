@@ -17,3 +17,9 @@ export function updateAppointment(id, payload) {
     body: JSON.stringify(payload),
   })
 }
+
+export function deleteAppointment(id) {
+  return apiFetch(`/appointments/${id}`, {
+    method: 'DELETE',
+  })
+}

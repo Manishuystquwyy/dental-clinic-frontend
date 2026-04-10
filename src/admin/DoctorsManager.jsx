@@ -1,61 +1,120 @@
 import { useState, useEffect } from 'react'
-import { useAuth } from '../context/AuthContext'
 import ProtectedRoute from '../components/ProtectedRoute'
-
-function loadDoctors() {
-  return JSON.parse(localStorage.getItem('gayatri_doctors') || '[]')
-}
-
-function saveDoctors(doctors) {
-  localStorage.setItem('gayatri_doctors', JSON.stringify(doctors))
-}
+import {
+  createDentist,
+  deleteDentist,
+  getDentists,
+  updateDentist,
+} from '../api/dentists'
 
 export default function DoctorsManagerPage() {
-  const { user } = useAuth()
   const [doctors, setDoctors] = useState([])
-  const [form, setForm] = useState({ id: '', name: '', specialization: '', experience: '' })
+  const [form, setForm] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    experienceYears: '',
+    qualification: '',
+    specialization: '',
+    pictureUrl: '',
+  })
   const [editing, setEditing] = useState(null)
+  const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
-    const stored = loadDoctors()
-    setDoctors(stored.length > 0 ? stored : [
-      { id: 'd1', name: 'Dr. Anita Sharma', specialization: 'Endodontist', experience: '8 years' },
-      { id: 'd2', name: 'Dr. Ramesh Gupta', specialization: 'Orthodontist', experience: '10 years' },
-      { id: 'd3', name: 'Dr. Priya Nair', specialization: 'Prosthodontist', experience: '6 years' }
-    ])
+    loadDoctors()
   }, [])
 
-  function addDoctor(e) {
-    e.preventDefault()
-    if (!form.name || !form.specialization) {
-      alert('Please fill all fields')
-      return
+  async function loadDoctors() {
+    try {
+      setError('')
+      setDoctors(await getDentists())
+    } catch (err) {
+      setError(err.message || 'Unable to load doctors.')
     }
-    const newDoc = { ...form, id: form.id || 'doc_' + Date.now() }
-    const updated = editing ? doctors.map(d => d.id === editing ? newDoc : d) : [...doctors, newDoc]
-    setDoctors(updated)
-    saveDoctors(updated)
-    setForm({ id: '', name: '', specialization: '', experience: '' })
-    setEditing(null)
   }
 
   function editDoctor(doc) {
-    setForm(doc)
+    setForm({
+      name: doc.name || '',
+      phone: doc.phone || '',
+      email: doc.email || '',
+      experienceYears: String(doc.experienceYears ?? ''),
+      qualification: doc.qualification || '',
+      specialization: doc.specialization || '',
+      pictureUrl: doc.pictureUrl || '',
+    })
     setEditing(doc.id)
   }
 
-  function deleteDoctor(id) {
-    const updated = doctors.filter(d => d.id !== id)
-    setDoctors(updated)
-    saveDoctors(updated)
+  function resetForm() {
+    setForm({
+      name: '',
+      phone: '',
+      email: '',
+      experienceYears: '',
+      qualification: '',
+      specialization: '',
+      pictureUrl: '',
+    })
+    setEditing(null)
+  }
+
+  async function saveDoctor(event) {
+    event.preventDefault()
+    setSubmitting(true)
+    setError('')
+
+    const payload = {
+      ...form,
+      email: form.email || null,
+      qualification: form.qualification || null,
+      specialization: form.specialization || null,
+      pictureUrl: form.pictureUrl || null,
+      experienceYears: Number(form.experienceYears || 0),
+    }
+
+    try {
+      const saved = editing
+        ? await updateDentist(editing, payload)
+        : await createDentist(payload)
+
+      setDoctors((prev) => {
+        if (editing) {
+          return prev.map((doctor) => (doctor.id === editing ? saved : doctor))
+        }
+        return [...prev, saved]
+      })
+      resetForm()
+    } catch (err) {
+      setError(err.message || 'Unable to save doctor.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  async function removeDoctor(id) {
+    try {
+      setError('')
+      await deleteDentist(id)
+      setDoctors((prev) => prev.filter((doctor) => doctor.id !== id))
+      if (editing === id) {
+        resetForm()
+      }
+    } catch (err) {
+      setError(err.message || 'Unable to delete doctor.')
+    }
   }
 
   return (
     <ProtectedRoute allowedRoles={['ADMIN']}>
       <section className="manager-page">
         <h2>Manage Doctors</h2>
-        
-        <form className="manager-form" onSubmit={addDoctor}>
+
+        {error && <p className="form-error">{error}</p>}
+
+        <form className="manager-form" onSubmit={saveDoctor}>
           <h3>{editing ? 'Edit' : 'Add'} Doctor</h3>
           <input
             placeholder="Name"
@@ -64,18 +123,43 @@ export default function DoctorsManagerPage() {
             required
           />
           <input
-            placeholder="Specialization"
-            value={form.specialization}
-            onChange={(e) => setForm({ ...form, specialization: e.target.value })}
+            placeholder="Phone"
+            value={form.phone}
+            onChange={(e) => setForm({ ...form, phone: e.target.value })}
             required
           />
           <input
-            placeholder="Experience"
-            value={form.experience}
-            onChange={(e) => setForm({ ...form, experience: e.target.value })}
+            placeholder="Email"
+            type="email"
+            value={form.email}
+            onChange={(e) => setForm({ ...form, email: e.target.value })}
           />
-          <button type="submit" className="primary">{editing ? 'Update' : 'Add'} Doctor</button>
-          {editing && <button type="button" onClick={() => { setEditing(null); setForm({ id: '', name: '', specialization: '', experience: '' }) }}>Cancel</button>}
+          <input
+            placeholder="Specialization"
+            value={form.specialization}
+            onChange={(e) => setForm({ ...form, specialization: e.target.value })}
+          />
+          <input
+            placeholder="Qualification"
+            value={form.qualification}
+            onChange={(e) => setForm({ ...form, qualification: e.target.value })}
+          />
+          <input
+            placeholder="Experience in years"
+            type="number"
+            min="0"
+            value={form.experienceYears}
+            onChange={(e) => setForm({ ...form, experienceYears: e.target.value })}
+          />
+          <input
+            placeholder="Picture URL"
+            value={form.pictureUrl}
+            onChange={(e) => setForm({ ...form, pictureUrl: e.target.value })}
+          />
+          <button type="submit" className="primary" disabled={submitting}>
+            {submitting ? 'Saving...' : editing ? 'Update' : 'Add'} Doctor
+          </button>
+          {editing && <button type="button" onClick={resetForm}>Cancel</button>}
         </form>
 
         <table className="manager-table">
@@ -88,14 +172,14 @@ export default function DoctorsManagerPage() {
             </tr>
           </thead>
           <tbody>
-            {doctors.map(doc => (
+            {doctors.map((doc) => (
               <tr key={doc.id}>
                 <td>{doc.name}</td>
-                <td>{doc.specialization}</td>
-                <td>{doc.experience}</td>
+                <td>{doc.specialization || '-'}</td>
+                <td>{doc.experienceYears} years</td>
                 <td>
                   <button onClick={() => editDoctor(doc)}>Edit</button>
-                  <button onClick={() => deleteDoctor(doc.id)}>Delete</button>
+                  <button onClick={() => removeDoctor(doc.id)}>Delete</button>
                 </td>
               </tr>
             ))}

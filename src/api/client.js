@@ -1,4 +1,9 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
+function resolveApiBaseUrl() {
+  const base = import.meta.env.VITE_API_BASE_URL?.trim() || ''
+  return base.endsWith('/api') ? base : `${base}/api`
+}
+
+const API_BASE_URL = resolveApiBaseUrl()
 
 function getAuthToken() {
   return localStorage.getItem('gayatri_token')
@@ -33,8 +38,14 @@ export async function apiFetch(path, options = {}) {
   }
 
   if (!res.ok) {
+    const validationMessage =
+      data && typeof data === 'object' && !Array.isArray(data)
+        ? Object.values(data).filter(Boolean).join(', ')
+        : ''
+
     const message =
       (typeof data === 'string' ? data : null) ||
+      validationMessage ||
       data?.message ||
       data?.error ||
       res.statusText ||
