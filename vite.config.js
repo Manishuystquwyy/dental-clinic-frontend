@@ -12,8 +12,8 @@ export default defineConfig({
   ],
   server: {
     proxy: {
-      '/api': 'http://localhost:8080',
-      '/uploads': 'http://localhost:8080',
+      '/api': 'https://api.gayatridental.com',
+      '/uploads': 'https://api.gayatridental.com',
     },
   },
 })
