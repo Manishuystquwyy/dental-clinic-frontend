@@ -14,6 +14,7 @@ export default function DoctorsManagerPage() {
     phone: '',
     email: '',
     experienceYears: '',
+    consultationFees: '',
     qualification: '',
     specialization: '',
     pictureUrl: '',
@@ -41,6 +42,7 @@ export default function DoctorsManagerPage() {
       phone: doc.phone || '',
       email: doc.email || '',
       experienceYears: String(doc.experienceYears ?? ''),
+      consultationFees: String(doc.consultationFees ?? ''),
       qualification: doc.qualification || '',
       specialization: doc.specialization || '',
       pictureUrl: doc.pictureUrl || '',
@@ -54,6 +56,7 @@ export default function DoctorsManagerPage() {
       phone: '',
       email: '',
       experienceYears: '',
+      consultationFees: '',
       qualification: '',
       specialization: '',
       pictureUrl: '',
@@ -73,6 +76,7 @@ export default function DoctorsManagerPage() {
       specialization: form.specialization || null,
       pictureUrl: form.pictureUrl || null,
       experienceYears: Number(form.experienceYears || 0),
+      consultationFees: Number(form.consultationFees || 0),
     }
 
     try {
@@ -152,6 +156,15 @@ export default function DoctorsManagerPage() {
             onChange={(e) => setForm({ ...form, experienceYears: e.target.value })}
           />
           <input
+            placeholder="Consultation Fees (₹)"
+            type="number"
+            min="0"
+            step="0.01"
+            value={form.consultationFees}
+            onChange={(e) => setForm({ ...form, consultationFees: e.target.value })}
+            required
+          />
+          <input
             placeholder="Picture URL"
             value={form.pictureUrl}
             onChange={(e) => setForm({ ...form, pictureUrl: e.target.value })}
@@ -168,6 +181,7 @@ export default function DoctorsManagerPage() {
               <th>Name</th>
               <th>Specialization</th>
               <th>Experience</th>
+              <th>Consultation Fees</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -177,6 +191,7 @@ export default function DoctorsManagerPage() {
                 <td>{doc.name}</td>
                 <td>{doc.specialization || '-'}</td>
                 <td>{doc.experienceYears} years</td>
+                <td>₹ {doc.consultationFees ?? 0}</td>
                 <td>
                   <button onClick={() => editDoctor(doc)}>Edit</button>
                   <button onClick={() => removeDoctor(doc.id)}>Delete</button>

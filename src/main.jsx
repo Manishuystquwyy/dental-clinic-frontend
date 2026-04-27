@@ -20,6 +20,7 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import ForgotPassword from './pages/ForgotPassword'
 import ResetPassword from './pages/ResetPassword'
+import Checkout from './pages/Checkout'
 import ProtectedRoute from './components/ProtectedRoute'
 import AdminLogin from './admin/Login'
 import AdminDashboard from './admin/Dashboard'
@@ -70,6 +71,14 @@ createRoot(document.getElementById('root')).render(
             <Route path="forgot-password" element={<ForgotPassword />} />
             <Route path="reset-password" element={<ResetPassword />} />
             <Route path="signup" element={<Signup />} />
+            <Route
+              path="checkout"
+              element={(
+                <ProtectedRoute allowedRoles={['PATIENT']}>
+                  <Checkout />
+                </ProtectedRoute>
+              )}
+            />
             <Route path="admin/login" element={<AdminLogin />} />
             <Route path="admin" element={<AdminDashboard />} />
             <Route path="admin/doctors" element={<DoctorsManager />} />
