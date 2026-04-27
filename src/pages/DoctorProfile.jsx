@@ -55,6 +55,7 @@ export default function DoctorProfile() {
             <p><strong>Experience:</strong> {doc.experienceYears} years</p>
             <p><strong>Qualification:</strong> {doc.qualification || '—'}</p>
             <p><strong>Specialization:</strong> {doc.specialization || '—'}</p>
+            <p><strong>Consultation Fees:</strong> ₹ {doc.consultationFees ?? 0}</p>
           </div>
         </div>
         <hr />
