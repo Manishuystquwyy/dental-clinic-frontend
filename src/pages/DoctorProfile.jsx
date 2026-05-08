@@ -46,6 +46,7 @@ export default function DoctorProfile() {
                 src={resolvePictureUrl(doc.pictureUrl)}
                 alt={`Dr. ${doc.name}`}
                 loading="lazy"
+                decoding="async"
                 onError={(e) => { e.currentTarget.style.display = 'none' }}
               />
             )}

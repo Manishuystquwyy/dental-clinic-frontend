@@ -14,6 +14,7 @@ export default function DoctorCard({ doctor, onSelect }) {
               src={resolvePictureUrl(doctor.pictureUrl)}
               alt={`Dr. ${doctor.name}`}
               loading="lazy"
+              decoding="async"
               onError={(e) => { e.currentTarget.style.display = 'none' }}
             />
           )}

@@ -38,6 +38,7 @@ export default function Doctors() {
                     src={resolvePictureUrl(d.pictureUrl)}
                     alt={`Dr. ${d.name}`}
                     loading="lazy"
+                    decoding="async"
                     onError={(e) => { e.currentTarget.style.display = 'none' }}
                   />
                 )}
