@@ -1,8 +1,7 @@
 import { Outlet } from 'react-router-dom'
 import { useState } from 'react'
 import { useAuth } from './context/AuthContext'
-import logoJpeg from './assets/logo.jpeg'
-import logoSvg from './assets/react.svg'
+import logoMarkWebp from './assets/logo-mark.webp'
 import './App.css'
 
 function App() {
@@ -13,12 +12,12 @@ function App() {
       <header className="site-header">
         <div className="brand">
           <img
-            src={logoJpeg}
+            src={logoMarkWebp}
             alt="Gayatri Dental Clinic"
-            onError={(e) => {
-              e.currentTarget.onerror = null
-              e.currentTarget.src = logoSvg
-            }}
+            width="256"
+            height="256"
+            className="brand-logo"
+            decoding="async"
           />
           <div className="brand-text">
             <h1>Gayatri Dental Clinic</h1>
