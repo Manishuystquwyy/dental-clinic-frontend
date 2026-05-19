@@ -46,6 +46,7 @@ export default function DoctorProfile() {
                 src={resolvePictureUrl(doc.pictureUrl)}
                 alt={`Dr. ${doc.name}`}
                 loading="lazy"
+                decoding="async"
                 onError={(e) => { e.currentTarget.style.display = 'none' }}
               />
             )}
@@ -55,6 +56,7 @@ export default function DoctorProfile() {
             <p><strong>Experience:</strong> {doc.experienceYears} years</p>
             <p><strong>Qualification:</strong> {doc.qualification || '—'}</p>
             <p><strong>Specialization:</strong> {doc.specialization || '—'}</p>
+            <p><strong>Consultation Fees:</strong> ₹ {doc.consultationFees ?? 0}</p>
           </div>
         </div>
         <hr />

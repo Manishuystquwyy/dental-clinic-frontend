@@ -14,6 +14,7 @@ export default function DoctorCard({ doctor, onSelect }) {
               src={resolvePictureUrl(doctor.pictureUrl)}
               alt={`Dr. ${doctor.name}`}
               loading="lazy"
+              decoding="async"
               onError={(e) => { e.currentTarget.style.display = 'none' }}
             />
           )}
@@ -21,6 +22,7 @@ export default function DoctorCard({ doctor, onSelect }) {
         <div className="doctor-meta">
           <h3>{doctor.name}</h3>
           <p>Experience: {doctor.experienceYears} years</p>
+          <p>Consultation Fees: ₹ {doctor.consultationFees ?? 0}</p>
           <p>Qualification: {doctor.qualification || '—'}</p>
           <p>Specialization: {doctor.specialization || '—'}</p>
         </div>

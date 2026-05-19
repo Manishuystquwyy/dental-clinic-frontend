@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { createAppointment } from '../api/appointments'
 import { createPublicRequest } from '../api/publicRequests'
 import { useAuth } from '../context/AuthContext'
+import { savePendingBooking } from '../utils/bookingCheckout'
 
-export default function AppointmentForm({ doctor, date, time, onBooked }) {
+export default function AppointmentForm({ doctor, date, time }) {
   const { user } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
@@ -18,24 +18,19 @@ export default function AppointmentForm({ doctor, date, time, onBooked }) {
   async function submit(e) {
     e.preventDefault()
     if (!user) return
-    setError('')
     setSubmitting(true)
-    try {
-      const appt = await createAppointment({
-        patientId: Number(user.patientId),
-        dentistId: Number(doctor.id),
-        appointmentDate: date,
-        appointmentTime: time,
-        status: 'BOOKED',
-        remarks: remarks || null,
-      })
-      onBooked(appt)
-      setTimeout(() => alert('Appointment confirmed — a confirmation was sent.'), 200)
-    } catch (err) {
-      setError(err.message || 'Booking failed.')
-    } finally {
-      setSubmitting(false)
-    }
+    setError('')
+    savePendingBooking({
+      doctor: {
+        id: doctor.id,
+        name: doctor.name,
+        consultationFees: doctor.consultationFees,
+      },
+      date,
+      time,
+      remarks: remarks || '',
+    })
+    navigate('/checkout')
   }
 
   if (!user) {
@@ -90,7 +85,19 @@ export default function AppointmentForm({ doctor, date, time, onBooked }) {
         <button
           type="button"
           className="secondary"
-          onClick={() => navigate('/login', { state: { from: location } })}
+          onClick={() => {
+            savePendingBooking({
+              doctor: {
+                id: doctor.id,
+                name: doctor.name,
+                consultationFees: doctor.consultationFees,
+              },
+              date,
+              time,
+              remarks: '',
+            })
+            navigate('/login', { state: { from: { pathname: '/checkout' }, bookingSource: location.pathname } })
+          }}
         >
           Login to Book Instantly
         </button>
@@ -102,13 +109,14 @@ export default function AppointmentForm({ doctor, date, time, onBooked }) {
     <form className="appointment-form" onSubmit={submit}>
       <h4>Booking for {doctor.name}</h4>
       <p>{date} at {time}</p>
+      <p>Consultation fee: ₹ {doctor.consultationFees ?? 0}</p>
       <label>
         Notes (optional)
         <input value={remarks} onChange={(e) => setRemarks(e.target.value)} placeholder="Any concerns or requests" />
       </label>
       {error && <p className="form-error">{error}</p>}
       <button type="submit" className="primary" disabled={submitting}>
-        {submitting ? 'Booking...' : 'Confirm Appointment'}
+        {submitting ? 'Redirecting...' : 'Proceed to Payment'}
       </button>
     </form>
   )

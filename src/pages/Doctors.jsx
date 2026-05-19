@@ -38,6 +38,7 @@ export default function Doctors() {
                     src={resolvePictureUrl(d.pictureUrl)}
                     alt={`Dr. ${d.name}`}
                     loading="lazy"
+                    decoding="async"
                     onError={(e) => { e.currentTarget.style.display = 'none' }}
                   />
                 )}
@@ -45,6 +46,7 @@ export default function Doctors() {
               <div className="doctor-meta">
                 <h3>{d.name}</h3>
                 <p>Experience: {d.experienceYears} years</p>
+                <p>Consultation Fees: ₹ {d.consultationFees ?? 0}</p>
                 <p>Qualification: {d.qualification || '—'}</p>
                 <p>Specialization: {d.specialization || '—'}</p>
               </div>
