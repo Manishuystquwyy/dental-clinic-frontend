@@ -3,6 +3,14 @@ import { getAppointments, updateAppointment } from '../api/appointments'
 import { getDentists } from '../api/dentists'
 import { useAuth } from '../context/AuthContext'
 
+function sortAppointmentsDescending(appointments) {
+  return [...appointments].sort((left, right) => {
+    const leftDateTime = `${left.appointmentDate || ''}T${left.appointmentTime || ''}`
+    const rightDateTime = `${right.appointmentDate || ''}T${right.appointmentTime || ''}`
+    return rightDateTime.localeCompare(leftDateTime)
+  })
+}
+
 export default function Appointments() {
   const [appts, setAppts] = useState([])
   const [dentists, setDentists] = useState([])
@@ -24,7 +32,7 @@ export default function Appointments() {
           (a) => a.patientId === Number(user.patientId)
         )
 
-        setAppts(mine)
+        setAppts(sortAppointmentsDescending(mine))
         setDentists(dentistsData || [])
       })
       .catch((err) => {

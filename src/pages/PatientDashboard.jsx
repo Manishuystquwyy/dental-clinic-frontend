@@ -1,7 +1,16 @@
 import { useEffect, useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { getAppointments, updateAppointment } from '../api/appointments'
 import { getDentists } from '../api/dentists'
+
+function sortAppointmentsDescending(appointments) {
+  return [...appointments].sort((left, right) => {
+    const leftDateTime = `${left.appointmentDate || ''}T${left.appointmentTime || ''}`
+    const rightDateTime = `${right.appointmentDate || ''}T${right.appointmentTime || ''}`
+    return rightDateTime.localeCompare(leftDateTime)
+  })
+}
 
 export default function PatientDashboard() {
   const { user } = useAuth()
@@ -17,7 +26,7 @@ export default function PatientDashboard() {
       .then(([appointmentsData, dentistsData]) => {
         if (!active) return
         const mine = (appointmentsData || []).filter((a) => a.patientId === Number(user.patientId))
-        setAppts(mine)
+        setAppts(sortAppointmentsDescending(mine))
         setDentists(dentistsData || [])
       })
       .catch((err) => {
@@ -65,7 +74,9 @@ export default function PatientDashboard() {
       <ul>
         {appts.map((a) => (
           <li key={a.id} className={a.status === 'CANCELLED' ? 'muted' : ''}>
-            <strong>{dentistById.get(a.dentistId)?.name || `Dentist #${a.dentistId}`}</strong> — {a.appointmentDate} {a.appointmentTime} ({a.status})
+            <Link className="appointment-dentist-link" to="/appointments">
+              {dentistById.get(a.dentistId)?.name || `Dentist #${a.dentistId}`}
+            </Link> — {a.appointmentDate} {a.appointmentTime} ({a.status})
             {a.status !== 'CANCELLED' && a.status !== 'COMPLETED' && (
               <button onClick={() => cancelAppt(a)}>Cancel</button>
             )}
