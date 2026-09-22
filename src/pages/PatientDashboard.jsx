@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { getAppointments, updateAppointment } from '../api/appointments'
 import { getDentists } from '../api/dentists'
+import PatientMedicalRecords from '../components/PatientMedicalRecords'
 
 function sortAppointmentsDescending(appointments) {
   return [...appointments].sort((left, right) => {
@@ -66,6 +67,7 @@ export default function PatientDashboard() {
     <section className="patient-dashboard">
       <h2>Patient Dashboard</h2>
       <p>Welcome, {user?.name}!</p>
+      <PatientMedicalRecords key={user?.patientId} />
 
       <h3>Your Appointments</h3>
       {loading && <p>Loading...</p>}

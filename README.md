@@ -1,5 +1,9 @@
 # React + Vite
 
+Use Node.js 24 LTS (`nvm use`; minimum 22.13). `npm run dev` and `npm run build` copy the PDF.js fonts, character maps and image decoders into `public/pdfjs/` automatically. These generated assets must be included in the deployed `dist/` folder. PDF previews are rendered locally with [PDF.js](https://mozilla.github.io/pdf.js/examples/); patient documents are not sent to an external viewer service.
+
+Doctors can write prescriptions or upload PDF/PNG/JPEG documents (up to 10 MiB) under **My Dashboard → Prescriptions & reports** for an assigned visit, including past visits. Patients find all shared records under **My Dashboard → My prescriptions & reports**. Written prescriptions support text download and **Print / Save as PDF**. See the backend's `docs/medical-records.md` for API and storage setup.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

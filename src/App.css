@@ -1022,6 +1022,9 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .doctor-dashboard li.muted, .patient-dashboard li.muted { opacity: 0.6 }
 .doctor-dashboard button, .patient-dashboard button { padding: 0.35rem 0.6rem; border-radius: 999px; border: none; background: #d94b4b; color: #fff; cursor: pointer }
 .appointment-dentist-link { color: var(--accent-2); font-weight: 700; text-decoration: underline; text-underline-offset: 2px }
+.doctor-appointment-section { margin-top: 2rem; }
+.doctor-empty-appointments { background: rgba(255, 255, 255, 0.95); color: var(--ink); border: 1px solid var(--border); }
+.doctor-empty-appointments p { margin: 0; color: var(--muted); }
 
 .checkout-page {
   padding: 1rem 0 2rem;

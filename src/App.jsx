@@ -41,6 +41,7 @@ function App() {
           <a href="/doctors">Doctors</a>
           <a href="/book">Book Appointment</a>
           {user && user.role === 'PATIENT' && <a href="/patient-dashboard">My Dashboard</a>}
+          {user && user.role === 'DOCTOR' && <a href="/doctor-dashboard">My Dashboard</a>}
           {user && user.role === 'PATIENT' && <a href="/my-profile">My Profile</a>}
           {!user && <a href="/login">Login</a>}
           {!user && <a href="/signup" className="cta">Sign Up</a>}
