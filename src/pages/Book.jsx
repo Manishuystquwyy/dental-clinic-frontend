@@ -1,7 +1,10 @@
+import { clinicToday, isFutureSlot } from '../utils/bookingTime'
+import useBookingNow from '../hooks/useBookingNow'
 import { useEffect, useState } from 'react'
 import DoctorCard from '../components/DoctorCard'
 import AppointmentForm from '../components/AppointmentForm'
 import { getDentists } from '../api/dentists'
+import { getAppointmentAvailability } from '../api/appointments'
 import DatePicker from '../components/DatePicker'
 
 export default function Book() {
@@ -10,10 +13,14 @@ export default function Book() {
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedTime, setSelectedTime] = useState('')
   const [booked, setBooked] = useState(null)
+  const [availableSlots, setAvailableSlots] = useState([])
+  const [loadingSlots, setLoadingSlots] = useState(false)
   const [error, setError] = useState('')
-  const today = new Date().toISOString().split('T')[0]
+  const now = useBookingNow()
+  const today = clinicToday(now)
+  const futureSlots = availableSlots.filter((slot) => isFutureSlot(selectedDate, slot, now))
 
-  const timeSlots = ['09:00', '10:30', '12:00', '14:00', '15:30', '17:00']
+  const timeSlots = ['10:30', '11:00', '14:00', '14:30', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00']
 
   useEffect(() => {
     let active = true
@@ -29,10 +36,37 @@ export default function Book() {
     }
   }, [])
 
+  useEffect(() => {
+    let active = true
+
+    if (!selected || !selectedDate) {
+      setAvailableSlots([])
+      return () => { active = false }
+    }
+
+    setAvailableSlots([])
+    setLoadingSlots(true)
+    getAppointmentAvailability(selected.id, selectedDate)
+      .then((data) => {
+        if (active) {
+          setAvailableSlots((data?.availableSlots || []).map((slot) => slot.slice(0, 5)))
+        }
+      })
+      .catch((err) => {
+        if (active) setError(err.message || 'Unable to load available time slots.')
+      })
+      .finally(() => {
+        if (active) setLoadingSlots(false)
+      })
+
+    return () => { active = false }
+  }, [selected, selectedDate])
+
   function handleSelect(doc) {
     setSelected(doc)
     setSelectedDate('')
     setSelectedTime('')
+    setAvailableSlots([])
     setBooked(null)
   }
 
@@ -67,15 +101,28 @@ export default function Book() {
               {selectedDate && (
                 <div>
                   <p>Available times:</p>
+                  {loadingSlots && <p>Loading available slots...</p>}
+                  {!loadingSlots && futureSlots.length === 0 && <p>No slots are available for this date.</p>}
                   <div className="times">
-                    {timeSlots.map((t) => (
-                      <button key={t} className={t === selectedTime ? 'active' : ''} onClick={() => { setSelectedTime(t); setBooked(null) }}>{t}</button>
-                    ))}
+                    {timeSlots.map((t) => {
+                      const expired = !isFutureSlot(selectedDate, t, now)
+                      const isAvailable = !expired && availableSlots.includes(t)
+                      return (
+                      <button
+                        key={t}
+                        type="button"
+                        disabled={!isAvailable || loadingSlots}
+                        className={`${t === selectedTime ? 'active' : ''} ${!isAvailable ? 'unavailable' : ''}`}
+                        onClick={() => { setSelectedTime(t); setBooked(null) }}
+                      >
+                        {t}{expired ? ' (Passed)' : !isAvailable ? ' (Unavailable)' : ''}
+                      </button>
+                    )})}
                   </div>
                 </div>
               )}
 
-              {selectedDate && selectedTime && !booked && (
+              {selectedDate && selectedTime && isFutureSlot(selectedDate, selectedTime, now) && !booked && (
                 <AppointmentForm doctor={selected} date={selectedDate} time={selectedTime} onBooked={handleBooked} />
               )}
 

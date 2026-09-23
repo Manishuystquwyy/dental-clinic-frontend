@@ -10,16 +10,15 @@ function formatDate(date) {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`
 }
 
-function startOfDay(date) {
-  return new Date(date.getFullYear(), date.getMonth(), date.getDate())
+function parseDate(value) {
+  const [year, month, day] = value.split('-').map(Number)
+  return new Date(year, month - 1, day)
 }
 
 export default function DatePicker({ label, value, onChange, minDate }) {
   const [open, setOpen] = useState(false)
-  const [viewDate, setViewDate] = useState(value ? new Date(value) : new Date())
+  const [viewDate, setViewDate] = useState(value ? parseDate(value) : minDate ? parseDate(minDate) : new Date())
   const containerRef = useRef(null)
-
-  const min = minDate ? startOfDay(new Date(minDate)) : null
 
   useEffect(() => {
     function handleClickOutside(e) {
@@ -33,7 +32,7 @@ export default function DatePicker({ label, value, onChange, minDate }) {
 
   useEffect(() => {
     if (value) {
-      setViewDate(new Date(value))
+      setViewDate(parseDate(value))
     }
   }, [value])
 
@@ -49,8 +48,7 @@ export default function DatePicker({ label, value, onChange, minDate }) {
 
   function isDisabled(date) {
     if (!date) return true
-    if (!min) return false
-    return startOfDay(date) < min
+    return Boolean(minDate && formatDate(date) < minDate)
   }
 
   function handleSelect(date) {

@@ -11,6 +11,15 @@ export function getAppointments() {
   return apiFetch('/appointments')
 }
 
+export function getMyDoctorAppointments() {
+  return apiFetch('/doctors/me/appointments')
+}
+
+export function getAppointmentAvailability(dentistId, appointmentDate) {
+  const params = new URLSearchParams({ dentistId, appointmentDate })
+  return apiFetch(`/appointments/availability?${params}`)
+}
+
 export function updateAppointment(id, payload) {
   return apiFetch(`/appointments/${id}`, {
     method: 'PUT',

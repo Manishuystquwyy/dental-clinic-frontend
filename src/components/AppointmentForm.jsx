@@ -1,3 +1,4 @@
+import { isFutureSlot } from '../utils/bookingTime'
 import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { createPublicRequest } from '../api/publicRequests'
@@ -15,9 +16,15 @@ export default function AppointmentForm({ doctor, date, time }) {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
+  function validateSlot() {
+    if (isFutureSlot(date, time)) return true
+    setError('This appointment time has passed. Please choose a future date and time.')
+    return false
+  }
+
   async function submit(e) {
     e.preventDefault()
-    if (!user) return
+    if (!user || !validateSlot()) return
     setSubmitting(true)
     setError('')
     savePendingBooking({
@@ -37,6 +44,7 @@ export default function AppointmentForm({ doctor, date, time }) {
     async function submitGuestRequest(event) {
       event.preventDefault()
       setError('')
+      if (!validateSlot()) return
       setSubmitting(true)
 
       try {
@@ -86,6 +94,7 @@ export default function AppointmentForm({ doctor, date, time }) {
           type="button"
           className="secondary"
           onClick={() => {
+            if (!validateSlot()) return
             savePendingBooking({
               doctor: {
                 id: doctor.id,

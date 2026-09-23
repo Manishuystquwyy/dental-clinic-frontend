@@ -867,6 +867,7 @@ blockquote cite {
 .times { display:flex; gap:0.5rem; flex-wrap:wrap; margin:0.5rem 0 }
 .times button { padding:0.4rem 0.6rem; border-radius:999px; border:1px solid var(--border); background:#faf7f3 }
 .times button.active { background:var(--accent-2); color:#fff; border-color: var(--accent-2) }
+.times button.unavailable { cursor:not-allowed; color:var(--muted); opacity:0.55; text-decoration:line-through }
 
 .appointment-form label { display:block; margin-bottom:0.6rem }
 .appointment-form input, .appointment-form textarea { width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:10px }
@@ -1020,6 +1021,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .doctor-dashboard li, .patient-dashboard li { padding: 0.8rem; border: 1px solid rgba(255,255,255,0.7); border-radius: 14px; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.95) }
 .doctor-dashboard li.muted, .patient-dashboard li.muted { opacity: 0.6 }
 .doctor-dashboard button, .patient-dashboard button { padding: 0.35rem 0.6rem; border-radius: 999px; border: none; background: #d94b4b; color: #fff; cursor: pointer }
+.appointment-dentist-link { color: var(--accent-2); font-weight: 700; text-decoration: underline; text-underline-offset: 2px }
+.doctor-appointment-section { margin-top: 2rem; }
+.doctor-empty-appointments { background: rgba(255, 255, 255, 0.95); color: var(--ink); border: 1px solid var(--border); }
+.doctor-empty-appointments p { margin: 0; color: var(--muted); }
 
 .checkout-page {
   padding: 1rem 0 2rem;
