@@ -1,24 +1,23 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import ProtectedRoute from '../components/ProtectedRoute'
-import { getMyDoctorAppointments } from '../api/appointments'
+import { getMyDoctorAppointments, updateAppointment } from '../api/appointments'
 import DoctorMedicalRecords from '../components/DoctorMedicalRecords'
 import '../components/MedicalRecords.css'
+import useBookingNow from '../hooks/useBookingNow'
+import { canCompleteAppointment } from '../utils/appointmentStatus'
 
 function getAppointmentDateTime(appointment) {
-  const value = new Date(`${appointment.appointmentDate}T${appointment.appointmentTime}`)
+  const value = new Date(`${appointment.appointmentDate}T${appointment.appointmentTime}+05:30`)
   return Number.isNaN(value.getTime()) ? null : value
 }
 
-function getUpcomingAppointments(appointments) {
-  const now = new Date()
+function getBookedAppointments(appointments) {
   return (appointments || [])
     .filter((appointment) => {
       const appointmentDateTime = getAppointmentDateTime(appointment)
       return appointmentDateTime
-        && appointmentDateTime >= now
-        && appointment.status !== 'CANCELLED'
-        && appointment.status !== 'COMPLETED'
+        && appointment.status === 'BOOKED'
     })
     .sort((left, right) => getAppointmentDateTime(left) - getAppointmentDateTime(right))
 }
@@ -37,11 +36,15 @@ export default function DoctorDashboard() {
   const [appts, setAppts] = useState([])
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
+  const [completingId, setCompletingId] = useState(null)
+  const [actionError, setActionError] = useState('')
+  const [notice, setNotice] = useState('')
+  const now = useBookingNow()
   const [showAll, setShowAll] = useState(false)
   const [selectedAppointment, setSelectedAppointment] = useState(null)
   const visibleAppointments = showAll
     ? [...appts].sort((left, right) => getAppointmentDateTime(right) - getAppointmentDateTime(left))
-    : getUpcomingAppointments(appts)
+    : getBookedAppointments(appts)
 
   useEffect(() => {
     let active = true
@@ -62,6 +65,30 @@ export default function DoctorDashboard() {
     }
   }, [])
 
+  async function markComplete(appointment) {
+    if (completingId !== null || !canCompleteAppointment(appointment)) return
+    setCompletingId(appointment.id)
+    setActionError('')
+    setNotice('')
+    try {
+      const updated = await updateAppointment(appointment.id, {
+        patientId: appointment.patientId,
+        dentistId: appointment.dentistId,
+        appointmentDate: appointment.appointmentDate,
+        appointmentTime: appointment.appointmentTime,
+        status: 'COMPLETED',
+        remarks: appointment.remarks || null,
+      })
+      setAppts((prev) => prev.map((item) => item.id === updated.id ? updated : item))
+      setSelectedAppointment((prev) => prev?.id === updated.id ? updated : prev)
+      setNotice(`Appointment for ${appointment.patientName || `Patient #${appointment.patientId}`} marked completed.`)
+    } catch (err) {
+      setActionError(err.message || 'Unable to complete appointment. Please try again.')
+    } finally {
+      setCompletingId(null)
+    }
+  }
+
   return (
     <ProtectedRoute allowedRoles={['DOCTOR']}>
       <section className="doctor-dashboard">
@@ -76,9 +103,13 @@ export default function DoctorDashboard() {
             {!loading && !error && <span>{visibleAppointments.length}</span>}
           </div>
           <div className="record-mode-switch" role="group" aria-label="Appointment period">
-            <button type="button" className={`record-button ${showAll ? 'secondary' : ''}`} aria-pressed={!showAll} onClick={() => setShowAll(false)}>Upcoming</button>
+            <button type="button" className={`record-button ${showAll ? 'secondary' : ''}`} aria-pressed={!showAll} onClick={() => setShowAll(false)}>Booked appointments</button>
             <button type="button" className={`record-button ${showAll ? '' : 'secondary'}`} aria-pressed={showAll} onClick={() => setShowAll(true)}>All visits / past appointments</button>
           </div>
+
+          <p>Booked appointments stay here until cancelled or completed. After the consultation, select Mark Complete.</p>
+          {actionError && <div className="appointment-error" role="alert">{actionError}</div>}
+          {notice && <p role="status">{notice}</p>}
 
           {loading && (
             <div className="appointments-loading">
@@ -92,7 +123,7 @@ export default function DoctorDashboard() {
           {!loading && !error && visibleAppointments.length === 0 && (
             <div className="empty-appointments doctor-empty-appointments">
               <div className="empty-icon">📅</div>
-              <p>{showAll ? 'No appointments found.' : 'You have no upcoming appointments. Open all visits to add or view records for past appointments.'}</p>
+              <p>{showAll ? 'No appointments found.' : 'You have no booked appointments awaiting consultation. Open all visits to view completed or cancelled appointments.'}</p>
             </div>
           )}
 
@@ -138,6 +169,17 @@ export default function DoctorDashboard() {
                     </div>
                   )}
                   <div className="appointment-actions">
+                    {appointment.status === 'BOOKED' && (
+                      <button
+                        type="button"
+                        className="record-button"
+                        disabled={completingId !== null || !canCompleteAppointment(appointment, now)}
+                        title={canCompleteAppointment(appointment, now) ? 'Mark complete after finishing the consultation' : 'Available from the scheduled appointment time'}
+                        onClick={() => markComplete(appointment)}
+                      >
+                        {completingId === appointment.id ? 'Completing...' : 'Mark Complete'}
+                      </button>
+                    )}
                     <button type="button" className="record-button" onClick={() => {
                       setSelectedAppointment(appointment)
                       window.scrollTo({ top: 0, behavior: 'smooth' })
