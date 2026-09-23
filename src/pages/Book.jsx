@@ -1,3 +1,5 @@
+import { clinicToday, isFutureSlot } from '../utils/bookingTime'
+import useBookingNow from '../hooks/useBookingNow'
 import { useEffect, useState } from 'react'
 import DoctorCard from '../components/DoctorCard'
 import AppointmentForm from '../components/AppointmentForm'
@@ -14,7 +16,9 @@ export default function Book() {
   const [availableSlots, setAvailableSlots] = useState([])
   const [loadingSlots, setLoadingSlots] = useState(false)
   const [error, setError] = useState('')
-  const today = new Date().toISOString().split('T')[0]
+  const now = useBookingNow()
+  const today = clinicToday(now)
+  const futureSlots = availableSlots.filter((slot) => isFutureSlot(selectedDate, slot, now))
 
   const timeSlots = ['10:30', '11:00', '14:00', '14:30', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00']
 
@@ -40,6 +44,7 @@ export default function Book() {
       return () => { active = false }
     }
 
+    setAvailableSlots([])
     setLoadingSlots(true)
     getAppointmentAvailability(selected.id, selectedDate)
       .then((data) => {
@@ -97,10 +102,11 @@ export default function Book() {
                 <div>
                   <p>Available times:</p>
                   {loadingSlots && <p>Loading available slots...</p>}
-                  {!loadingSlots && availableSlots.length === 0 && <p>No slots are available for this date.</p>}
+                  {!loadingSlots && futureSlots.length === 0 && <p>No slots are available for this date.</p>}
                   <div className="times">
                     {timeSlots.map((t) => {
-                      const isAvailable = availableSlots.includes(t)
+                      const expired = !isFutureSlot(selectedDate, t, now)
+                      const isAvailable = !expired && availableSlots.includes(t)
                       return (
                       <button
                         key={t}
@@ -109,14 +115,14 @@ export default function Book() {
                         className={`${t === selectedTime ? 'active' : ''} ${!isAvailable ? 'unavailable' : ''}`}
                         onClick={() => { setSelectedTime(t); setBooked(null) }}
                       >
-                        {t}{!isAvailable ? ' (Booked)' : ''}
+                        {t}{expired ? ' (Passed)' : !isAvailable ? ' (Unavailable)' : ''}
                       </button>
                     )})}
                   </div>
                 </div>
               )}
 
-              {selectedDate && selectedTime && !booked && (
+              {selectedDate && selectedTime && isFutureSlot(selectedDate, selectedTime, now) && !booked && (
                 <AppointmentForm doctor={selected} date={selectedDate} time={selectedTime} onBooked={handleBooked} />
               )}
 

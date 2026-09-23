@@ -1,3 +1,5 @@
+import { clinicToday, isFutureSlot } from '../utils/bookingTime'
+import useBookingNow from '../hooks/useBookingNow'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import AppointmentForm from '../components/AppointmentForm'
@@ -16,7 +18,9 @@ export default function DoctorProfile() {
   const [availableSlots, setAvailableSlots] = useState([])
   const [loadingSlots, setLoadingSlots] = useState(false)
   const [availabilityError, setAvailabilityError] = useState('')
-  const today = new Date().toISOString().split('T')[0]
+  const now = useBookingNow()
+  const today = clinicToday(now)
+  const futureSlots = availableSlots.filter((slot) => isFutureSlot(date, slot, now))
 
   const timeSlots = ['10:30', '11:00', '14:00', '14:30', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00']
 
@@ -43,6 +47,7 @@ export default function DoctorProfile() {
       return () => { active = false }
     }
 
+    setAvailableSlots([])
     setLoadingSlots(true)
     setAvailabilityError('')
     getAppointmentAvailability(id, date)
@@ -104,10 +109,11 @@ export default function DoctorProfile() {
               <p>Available times:</p>
               {loadingSlots && <p>Loading available slots...</p>}
               {availabilityError && <p className="form-error">{availabilityError}</p>}
-              {!loadingSlots && availableSlots.length === 0 && <p>No slots are available for this date.</p>}
+              {!loadingSlots && futureSlots.length === 0 && <p>No slots are available for this date.</p>}
               <div className="times">
                 {timeSlots.map((t) => {
-                  const isAvailable = availableSlots.includes(t)
+                  const expired = !isFutureSlot(date, t, now)
+                  const isAvailable = !expired && availableSlots.includes(t)
                   return (
                     <button
                       key={t}
@@ -116,7 +122,7 @@ export default function DoctorProfile() {
                       onClick={() => { setTime(t); setBooked(null) }}
                       className={`${t === time ? 'active' : ''} ${!isAvailable ? 'unavailable' : ''}`}
                     >
-                      {t}{!isAvailable ? ' (Booked)' : ''}
+                      {t}{expired ? ' (Passed)' : !isAvailable ? ' (Unavailable)' : ''}
                     </button>
                   )
                 })}
@@ -128,7 +134,7 @@ export default function DoctorProfile() {
 
       <div>
         {!date && <p>Select a slot to book.</p>}
-        {date && time && !booked && (
+        {date && time && isFutureSlot(date, time, now) && !booked && (
           <AppointmentForm doctor={doc} date={date} time={time} onBooked={setBooked} />
         )}
 
