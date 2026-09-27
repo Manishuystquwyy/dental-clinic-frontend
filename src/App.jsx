@@ -1,5 +1,5 @@
-import { Outlet } from 'react-router-dom'
-import { useState } from 'react'
+import { Link, Outlet } from 'react-router-dom'
+import { Suspense, useState } from 'react'
 import { useAuth } from './context/AuthContext'
 import logoMarkWebp from './assets/logo-mark.webp'
 import './App.css'
@@ -36,15 +36,15 @@ function App() {
           <span />
         </button>
         <nav className={`nav ${menuOpen ? 'open' : ''}`} onClick={() => setMenuOpen(false)}>
-          <a href="/">Home</a>
-          <a href="/services">Services</a>
-          <a href="/doctors">Doctors</a>
-          <a href="/book">Book Appointment</a>
-          {user && user.role === 'PATIENT' && <a href="/patient-dashboard">My Dashboard</a>}
-          {user && user.role === 'DOCTOR' && <a href="/doctor-dashboard">My Dashboard</a>}
-          {user && user.role === 'PATIENT' && <a href="/my-profile">My Profile</a>}
-          {!user && <a href="/login">Login</a>}
-          {!user && <a href="/signup" className="cta">Sign Up</a>}
+          <Link to="/">Home</Link>
+          <Link to="/services">Services</Link>
+          <Link to="/doctors">Doctors</Link>
+          <Link to="/book">Book Appointment</Link>
+          {user && user.role === 'PATIENT' && <Link to="/patient-dashboard">My Dashboard</Link>}
+          {user && user.role === 'DOCTOR' && <Link to="/doctor-dashboard">My Dashboard</Link>}
+          {user && user.role === 'PATIENT' && <Link to="/my-profile">My Profile</Link>}
+          {!user && <Link to="/login">Login</Link>}
+          {!user && <Link to="/signup" className="cta">Sign Up</Link>}
           {user && <span className={`role-badge role-${user.role.toLowerCase()}`}>{user.role}</span>}
           {user && <span style={{ fontSize: '0.85rem', color: '#666' }}>{user.name}</span>}
           {user && (
@@ -59,7 +59,9 @@ function App() {
       </header>
 
       <main>
-        <Outlet />
+        <Suspense fallback={<p role="status">Loading page...</p>}>
+          <Outlet />
+        </Suspense>
       </main>
 
       <footer className="site-footer">

@@ -27,7 +27,7 @@ async function authenticatedFetch(path, options) {
   const res = await fetch(buildUrl(path), {
     ...fetchOptions,
     headers: {
-      ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
+      ...(typeof options.body === 'string' ? { 'Content-Type': 'application/json' } : {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(headers || {}),
     },
