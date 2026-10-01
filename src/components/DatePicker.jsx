@@ -32,6 +32,7 @@ export default function DatePicker({ label, value, onChange, minDate }) {
 
   useEffect(() => {
     if (value) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Synchronize the displayed month with an externally selected date.
       setViewDate(parseDate(value))
     }
   }, [value])

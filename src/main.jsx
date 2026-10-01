@@ -6,6 +6,7 @@ import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 
+const Legal = lazy(() => import('./pages/Legal'))
 const Home = lazy(() => import('./pages/Home'))
 const About = lazy(() => import('./pages/About'))
 const Doctors = lazy(() => import('./pages/Doctors'))
@@ -36,6 +37,8 @@ createRoot(document.getElementById('root')).render(
         <Routes>
           <Route path="/" element={<App />}>
             <Route index element={<Home />} />
+            <Route path="privacy" element={<Legal />} />
+            <Route path="terms" element={<Legal />} />
             <Route path="about" element={<About />} />
             <Route path="doctors" element={<Doctors />} />
             <Route path="doctors/:id" element={<DoctorProfile />} />
