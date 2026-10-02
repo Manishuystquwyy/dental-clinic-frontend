@@ -1,3 +1,4 @@
+import { useNotifications } from '../context/NotificationContext'
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
@@ -14,6 +15,7 @@ function sortAppointmentsDescending(appointments) {
 }
 
 export default function PatientDashboard() {
+  const { notify } = useNotifications()
   const { user } = useAuth()
   const [appts, setAppts] = useState([])
   const [dentists, setDentists] = useState([])
@@ -59,7 +61,7 @@ export default function PatientDashboard() {
       })
       setAppts((prev) => prev.map((a) => (a.id === appt.id ? updated : a)))
     } catch (err) {
-      alert(err.message || 'Unable to cancel appointment.')
+      notify(err.message || 'Unable to cancel appointment.', { title: 'Cancellation failed', tone: 'error' })
     }
   }
 

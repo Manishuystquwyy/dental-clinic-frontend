@@ -1,3 +1,4 @@
+import { useNotifications } from '../context/NotificationContext'
 import { isFutureSlot } from '../utils/bookingTime'
 import useBookingNow from '../hooks/useBookingNow'
 import { useMemo, useState } from 'react'
@@ -20,6 +21,7 @@ function loadRazorpayScript() {
 }
 
 export default function Checkout() {
+  const { notify } = useNotifications()
   const navigate = useNavigate()
   const { user } = useAuth()
   const pendingBooking = useMemo(() => loadPendingBooking(), [])
@@ -95,7 +97,7 @@ export default function Checkout() {
       })
 
       clearPendingBooking()
-      alert('Payment successful. Your appointment is confirmed.')
+      notify('Payment successful. Your appointment is confirmed.', { title: 'Appointment confirmed' })
       navigate('/appointments', { replace: true, state: { bookedAppointmentId: result?.id } })
     } catch (err) {
       setError(err.message || 'Payment failed. Please try again.')

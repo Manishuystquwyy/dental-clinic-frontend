@@ -276,3 +276,18 @@ main>section:not(.g-section){width:calc(100% - 32px);margin:28px auto 48px}
 *,*:before,*:after{animation:none!important;transition:none!important}
 }
 
+
+.auth-form label > span { display: block; margin-top: 0.3rem; font-size: 12px; }
+.auth-form [aria-invalid="true"] { border-color: #d32f2f; }
+
+.auth-form textarea { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid var(--border); border-radius: 6px; background: #fff; font: inherit; resize: vertical; }
+.auth-form textarea[aria-invalid="true"] { border-color: #d32f2f; }
+
+.auth-password-field { margin-bottom: 1rem; }
+.auth-form .auth-password-field label { margin-bottom: 0; }
+.auth-password-control { position: relative; }
+.auth-form .auth-password-control input { padding-right: 48px; }
+.auth-password-toggle { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 4px; background: transparent; color: var(--ink); cursor: pointer; }
+.auth-password-toggle:hover { background: #eef0e7; }
+.auth-password-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
+.auth-password-field > .form-error { display: block; }

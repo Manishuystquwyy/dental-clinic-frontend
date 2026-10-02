@@ -1,8 +1,10 @@
+import { useNotifications } from '../context/NotificationContext'
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 export default function Login() {
+  const { notify } = useNotifications()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -18,7 +20,7 @@ export default function Login() {
     setSubmitting(true)
     try {
       await login(email, password)
-      alert('Logged in successfully!')
+      notify('Welcome back to Gayatri Dental Clinic.', { title: 'Signed in' })
       navigate(redirectTo)
     } catch (err) {
       setError(err.message || 'Login failed.')
