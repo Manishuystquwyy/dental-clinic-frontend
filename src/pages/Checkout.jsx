@@ -1,3 +1,6 @@
+import { useNotifications } from '../context/NotificationContext'
+import { isFutureSlot } from '../utils/bookingTime'
+import useBookingNow from '../hooks/useBookingNow'
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { createRazorpayOrder, verifyRazorpayPayment } from '../api/payments'
@@ -18,17 +21,24 @@ function loadRazorpayScript() {
 }
 
 export default function Checkout() {
+  const { notify } = useNotifications()
   const navigate = useNavigate()
   const { user } = useAuth()
   const pendingBooking = useMemo(() => loadPendingBooking(), [])
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const now = useBookingNow()
+  const expired = pendingBooking && !isFutureSlot(pendingBooking.date, pendingBooking.time, now)
 
   async function handlePayment(event) {
     event.preventDefault()
     if (!pendingBooking) return
 
     setError('')
+    if (!isFutureSlot(pendingBooking.date, pendingBooking.time)) {
+      setError('This appointment time has passed. Please change your booking.')
+      return
+    }
     setSubmitting(true)
     try {
       const scriptLoaded = await loadRazorpayScript()
@@ -87,7 +97,7 @@ export default function Checkout() {
       })
 
       clearPendingBooking()
-      alert('Payment successful. Your appointment is confirmed.')
+      notify('Payment successful. Your appointment is confirmed.', { title: 'Appointment confirmed' })
       navigate('/appointments', { replace: true, state: { bookedAppointmentId: result?.id } })
     } catch (err) {
       setError(err.message || 'Payment failed. Please try again.')
@@ -151,6 +161,7 @@ export default function Checkout() {
             </div>
           </div>
 
+          {expired && <p className="form-error">This appointment time has passed. Please change your booking.</p>}
           {error && <p className="form-error">{error}</p>}
 
           <div className="checkout-total">
@@ -158,7 +169,7 @@ export default function Checkout() {
             <strong>₹ {fee}</strong>
           </div>
 
-          <button type="submit" className="primary" disabled={submitting}>
+          <button type="submit" className="primary" disabled={submitting || expired}>
             {submitting ? 'Opening Razorpay...' : 'Pay With Razorpay'}
           </button>
           <Link to="/book" className="secondary">Change Booking</Link>

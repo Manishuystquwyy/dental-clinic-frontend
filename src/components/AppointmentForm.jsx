@@ -1,3 +1,5 @@
+import { useNotifications } from '../context/NotificationContext'
+import { isFutureSlot } from '../utils/bookingTime'
 import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { createPublicRequest } from '../api/publicRequests'
@@ -5,6 +7,7 @@ import { useAuth } from '../context/AuthContext'
 import { savePendingBooking } from '../utils/bookingCheckout'
 
 export default function AppointmentForm({ doctor, date, time }) {
+  const { notify } = useNotifications()
   const { user } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
@@ -15,9 +18,15 @@ export default function AppointmentForm({ doctor, date, time }) {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
 
+  function validateSlot() {
+    if (isFutureSlot(date, time)) return true
+    setError('This appointment time has passed. Please choose a future date and time.')
+    return false
+  }
+
   async function submit(e) {
     e.preventDefault()
-    if (!user) return
+    if (!user || !validateSlot()) return
     setSubmitting(true)
     setError('')
     savePendingBooking({
@@ -37,6 +46,7 @@ export default function AppointmentForm({ doctor, date, time }) {
     async function submitGuestRequest(event) {
       event.preventDefault()
       setError('')
+      if (!validateSlot()) return
       setSubmitting(true)
 
       try {
@@ -50,7 +60,7 @@ export default function AppointmentForm({ doctor, date, time }) {
         setGuestName('')
         setGuestPhone('')
         setGuestMessage('')
-        alert('Your booking request has been sent. We will contact you shortly.')
+        notify('Your booking request has been sent. We will contact you shortly.', { title: 'Request received' })
       } catch (err) {
         setError(err.message || 'Unable to send booking request.')
       } finally {
@@ -86,6 +96,7 @@ export default function AppointmentForm({ doctor, date, time }) {
           type="button"
           className="secondary"
           onClick={() => {
+            if (!validateSlot()) return
             savePendingBooking({
               doctor: {
                 id: doctor.id,

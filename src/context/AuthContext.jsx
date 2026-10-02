@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect } from 'react'
-import { login as loginApi, register as registerApi, me as meApi } from '../api/auth'
+import { googleLogin as googleLoginApi, login as loginApi, register as registerApi, me as meApi } from '../api/auth'
 
+// eslint-disable-next-line react-refresh/only-export-components -- Existing shared context API.
 export const AuthContext = createContext()
 
 function loadUserFromStorage() {
@@ -32,6 +33,7 @@ export function AuthProvider({ children }) {
     const stored = loadUserFromStorage()
     const token = localStorage.getItem('gayatri_token')
     if (!stored || !token) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Finish the initial authentication check when no session is stored.
       setUser(null)
       setLoading(false)
       return
@@ -71,6 +73,16 @@ export function AuthProvider({ children }) {
     return response.user
   }
 
+  async function loginWithGoogle(credential, profile) {
+    const response = await googleLoginApi(credential, profile)
+    if (!response.registrationRequired) {
+      saveToken(response.token)
+      setUser(response.user)
+      saveUserToStorage(response.user)
+    }
+    return response
+  }
+
   function logout() {
     setUser(null)
     saveUserToStorage(null)
@@ -78,12 +90,13 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, signup, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, signup, login, loginWithGoogle, logout }}>
       {children}
     </AuthContext.Provider>
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components -- Existing shared authentication hook API.
 export function useAuth() {
   const context = React.useContext(AuthContext)
   if (!context) {

@@ -3,12 +3,16 @@ import ProtectedRoute from '../components/ProtectedRoute'
 import { getAppointments, updateAppointment } from '../api/appointments'
 import { getDentists } from '../api/dentists'
 import { getPatients } from '../api/patients'
+import useBookingNow from '../hooks/useBookingNow'
+import { canCompleteAppointment } from '../utils/appointmentStatus'
 
 export default function AppointmentsManager() {
   const [appts, setAppts] = useState([])
   const [dentists, setDentists] = useState([])
   const [patients, setPatients] = useState([])
   const [error, setError] = useState('')
+  const [updatingId, setUpdatingId] = useState(null)
+  const now = useBookingNow()
 
   useEffect(() => {
     let active = true
@@ -35,6 +39,9 @@ export default function AppointmentsManager() {
   const patientById = new Map(patients.map((patient) => [patient.id, patient]))
 
   async function updateStatus(appointment, status) {
+    if (updatingId !== null) return
+    if (status === 'COMPLETED' && !canCompleteAppointment(appointment)) return
+    setUpdatingId(appointment.id)
     try {
       setError('')
       const updated = await updateAppointment(appointment.id, {
@@ -48,6 +55,8 @@ export default function AppointmentsManager() {
       setAppts((prev) => prev.map((item) => (item.id === appointment.id ? updated : item)))
     } catch (err) {
       setError(err.message || 'Unable to update appointment.')
+    } finally {
+      setUpdatingId(null)
     }
   }
 
@@ -79,10 +88,14 @@ export default function AppointmentsManager() {
                 <td>{a.appointmentDate} {a.appointmentTime}</td>
                 <td><strong>{a.status}</strong></td>
                 <td>
-                  {a.status !== 'COMPLETED' && (
+                  {a.status === 'BOOKED' && (
                     <>
-                      <button onClick={() => updateStatus(a, 'COMPLETED')}>Mark Complete</button>
-                      <button onClick={() => updateStatus(a, 'CANCELLED')}>Cancel</button>
+                      <button
+                        disabled={updatingId !== null || !canCompleteAppointment(a, now)}
+                        title={canCompleteAppointment(a, now) ? 'Mark complete after finishing the consultation' : 'Available from the scheduled appointment time'}
+                        onClick={() => updateStatus(a, 'COMPLETED')}
+                      >{updatingId === a.id ? 'Updating...' : 'Mark Complete'}</button>
+                      <button disabled={updatingId !== null} onClick={() => updateStatus(a, 'CANCELLED')}>Cancel</button>
                     </>
                   )}
                 </td>

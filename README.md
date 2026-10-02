@@ -1,5 +1,9 @@
 # React + Vite
 
+Use Node.js 24 LTS (`nvm use`; minimum 22.13). `npm run dev` and `npm run build` copy the PDF.js fonts, character maps and image decoders into `public/pdfjs/` automatically. These generated assets must be included in the deployed `dist/` folder. PDF previews are rendered locally with [PDF.js](https://mozilla.github.io/pdf.js/examples/); patient documents are not sent to an external viewer service.
+
+Doctors can write prescriptions or upload PDF/PNG/JPEG documents (up to 10 MiB) under **My Dashboard → Prescriptions & reports** for an assigned visit, including past visits. Patients find all shared records under **My Dashboard → My prescriptions & reports**. Written prescriptions support text download and **Print / Save as PDF**. See the backend's `docs/medical-records.md` for API and storage setup.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:
@@ -29,3 +33,9 @@ Deploy flow:
 1. Run `npm run build`.
 2. Deploy the generated `dist/` folder to the frontend host.
 3. Make sure the backend CORS config includes the deployed frontend origin, for example `https://gayatridental.com` and `https://www.gayatridental.com`.
+
+## Google sign-in
+
+The Google OAuth Web client ID is configured in `.env`, `.env.development`, and `.env.production`, and matches the backend default for both profiles. Override `VITE_GOOGLE_CLIENT_ID` in `.env.local` or the production build environment only when changing clients, and set `GOOGLE_CLIENT_ID` to the same ID on the backend. Restart/rebuild after changing configuration. With no frontend client ID the Google button is hidden.
+
+Full Google Cloud, schema, deployment, and verification instructions: `../dental-clinic-backend/docs/google-login.md`.
