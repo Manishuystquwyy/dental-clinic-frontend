@@ -872,6 +872,7 @@ blockquote cite {
 .appointment-form label { display:block; margin-bottom:0.6rem }
 .appointment-form input, .appointment-form textarea { width:100%; padding:0.5rem; border:1px solid var(--border); border-radius:10px }
 input[type="date"] {
+  color-scheme: light;
   appearance: none;
   -webkit-appearance: none;
   padding: 0.6rem 2.25rem 0.6rem 0.9rem;
@@ -893,10 +894,11 @@ input[type="date"]:focus {
 
 input[type="date"]::-webkit-calendar-picker-indicator {
   cursor: pointer;
-  opacity: 0.9;
-  filter: hue-rotate(120deg) saturate(1.2);
-  background: transparent;
-  margin-right: -0.3rem;
+  opacity: 1;
+  filter: none;
+  width: 20px;
+  height: 20px;
+  margin-right: 0;
 }
 
 /* Custom date picker */
@@ -1543,3 +1545,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     grid-template-columns: 1fr;
   }
 }
+
+.google-sign-in { margin-top: 1rem; }
+.google-sign-in-divider { text-align: center; color: var(--text-muted, #666); }
+.google-profile-fields { border: 0; padding: 0; margin: 0; display: grid; gap: 1rem; min-width: 0; }

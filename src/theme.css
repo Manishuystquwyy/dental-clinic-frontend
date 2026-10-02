@@ -1,0 +1,312 @@
+/* Presentation layer shared by the public site and existing application workflows. */
+:root{--bg:#faf9f5;--bg-2:#efeee7;--ink:#203e3b;--muted:#64716b;--accent:#214f49;--accent-2:#214f49;--accent-3:#c0a779;--border:#dce1d9;--shadow:0 12px 32px #183a3510;--radius:14px}
+
+html{scroll-behavior:smooth;scroll-padding-top:130px}
+body{background:var(--bg);font-family:'Manrope',Arial,sans-serif;line-height:1.65}
+body:before,body:after{display:none}
+h1,h2,h3,h4{color:var(--ink)}
+button,input,select,textarea{font:inherit}
+button,a,input,textarea,select{-webkit-tap-highlight-color:transparent}
+button{cursor:pointer}
+button:disabled{cursor:not-allowed}
+a,button{touch-action:manipulation}
+p{color:var(--muted)}
+#root,.site-root{max-width:none;margin:0;padding:0}
+main{min-height:60vh}
+main>section:not(.g-section){max-width:1200px;margin:48px auto 72px;width:calc(100% - 64px)}
+.g-container{width:min(1240px,calc(100% - 96px));margin-inline:auto}
+.g-section{padding-block:96px}
+.g-eyebrow{font-size:10px;font-weight:800;letter-spacing:2px;line-height:1.6;display:inline-block;color:#527267}
+.g-section-heading{max-width:620px;margin-bottom:36px}
+.g-section-heading h2{font-size:clamp(32px,3.4vw,48px);line-height:1.16;font-weight:500;margin:16px 0}
+.g-section-heading p{max-width:520px;font-size:14px}
+.g-section-row{display:flex;align-items:center;justify-content:space-between;gap:32px}
+.g-section-row>.g-button{flex-shrink:0}
+.g-actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.g-button,.primary,.secondary{display:inline-flex;align-items:center;justify-content:center;gap:18px;min-height:48px;padding:13px 22px;border:1px solid transparent;border-radius:5px;font-size:12px;font-weight:700;transition:background .2s,transform .2s;box-shadow:none;text-decoration:none}
+.g-button-primary,.primary{background:var(--accent);color:#fff}
+.g-button-primary:hover,.primary:hover{background:#123c36;color:white;box-shadow:none;transform:translateY(-2px)}
+.g-button-outline,.secondary{background:transparent;border-color:#bdc9c0;color:var(--ink)}
+.g-button-outline:hover,.secondary:hover{background:#e7ece4}
+.g-skip{position:fixed;top:-100px;left:20px;z-index:100;background:white;padding:12px}
+.g-skip:focus{top:10px}
+.g-header{position:sticky;top:-31px;z-index:40;background:#faf9f5f5;backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.g-topbar{height:31px;background:#1e4540;color:#f3f4e9;display:flex;justify-content:space-between;padding:5px max(48px,calc((100vw - 1240px)/2));font-size:10px;letter-spacing:.4px}
+.g-topbar a{display:flex;align-items:center;gap:8px}
+.g-nav-shell{width:min(1340px,calc(100% - 64px));margin:auto;min-height:92px;display:flex;align-items:center;justify-content:space-between;gap:30px;transition:min-height .2s}
+.is-compact .g-nav-shell{min-height:74px}
+.g-brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.g-brand img{object-fit:contain}
+.g-brand>span{font-family:Georgia,serif;font-size:23px;letter-spacing:2px;line-height:1.1}
+.g-brand small{display:block;font:9px 'Manrope',sans-serif;letter-spacing:3.2px;margin-top:7px}
+.g-nav{display:flex;align-items:center;gap:23px;font-size:11px;font-weight:600}
+.g-nav>a:not(.g-button){padding-block:12px}
+.g-nav>a.active{color:#8b7146}
+.g-nav .g-button{padding:12px 16px;font-size:11px}
+.g-account{display:flex;gap:10px;align-items:center;border-left:1px solid var(--border);padding-left:18px}
+.g-account button{border:0;background:transparent;color:var(--ink);padding:0;font-size:11px}
+.g-menu-toggle{display:none}
+.g-hero{background:#efeee6;overflow:hidden}
+.g-hero-grid{display:grid;grid-template-columns:1fr 1.08fr;min-height:610px;align-items:center;gap:42px;padding-block:48px}
+.g-hero-copy{padding-block:24px}
+.g-dot{width:6px;height:6px;background:#6b8b61;border-radius:50%;display:inline-block;margin-right:9px}
+.g-hero h1{font-size:clamp(42px,4.8vw,72px);font-weight:500;line-height:1.12;letter-spacing:-2.8px;margin:24px 0}
+.g-hero em,.g-appointment em{font-weight:400;color:#66816d}
+.g-hero-copy>p{max-width:370px;font-size:15px;margin:0 0 28px}
+.g-hero-note{display:flex;gap:12px;align-items:center;font-size:11px;margin-top:42px;color:var(--muted)}
+.g-hero-note strong{color:var(--ink);font-weight:600}
+.g-hero-image{position:relative;align-self:stretch;min-height:490px}
+.g-hero-image>img{width:100%;height:100%;position:absolute;object-fit:cover;border-radius:140px 10px 10px 10px;object-position:55% center}
+.g-image-note{position:absolute;bottom:40px;left:-24px;right:24px;background:#fffffff0;padding:21px 24px;border-radius:6px;display:flex;gap:16px;align-items:center;font-size:13px;box-shadow:var(--shadow)}
+.g-image-note>svg:last-child{margin-left:auto}
+.g-image-note small{display:block;font-size:10px;color:var(--muted);margin-top:3px}
+.g-image-caption{position:absolute;bottom:12px;right:20px;font-size:8px;letter-spacing:2px;color:#253b33;background:#ffffffc9;padding:3px 6px}
+.g-trust{display:grid;grid-template-columns:repeat(4,1fr);padding-block:35px;border-bottom:1px solid var(--border)}
+.g-trust>div{display:flex;align-items:center;gap:17px;padding:0 25px;border-right:1px solid var(--border)}
+.g-trust>div:first-child{padding-left:0}
+.g-trust>div:last-child{border:0}
+.g-trust strong{font:36px Georgia,serif;color:#67816e}
+.g-trust strong svg{width:30px;height:30px;stroke-width:1.3}
+.g-trust span{font-size:12px;font-weight:700}
+.g-trust small{display:block;font-size:10px;font-weight:400;color:var(--muted);margin-top:4px}
+.g-about{display:grid;grid-template-columns:1fr 1fr;gap:90px;align-items:center}
+.g-about-media{position:relative}
+.g-about-media img{width:100%;height:470px;object-fit:cover;border-radius:8px 8px 100px 8px}
+.g-about-media>span{position:absolute;bottom:24px;left:24px;background:#faf9f5ed;padding:15px 24px;font-size:9px;letter-spacing:2px}
+.g-about p{font-size:14px}
+.g-values{display:grid;gap:13px;margin:26px 0 30px;font-size:12px}
+.g-values span{display:flex;align-items:center;gap:12px}
+.g-values svg{width:18px;stroke-width:1.5}
+.g-treatments-section{background:#f0f1eb}
+.g-treatment-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}
+.g-treatment{background:#fff;border:1px solid #e2e6de;border-radius:8px;overflow:hidden;display:flex;flex-direction:column;scroll-margin-top:140px}
+.g-treatment>img{width:100%;height:180px;object-fit:cover}
+.g-treatment>div{padding:23px;display:flex;flex:1;flex-direction:column}
+.g-treatment .g-eyebrow{font-size:8px}
+.g-treatment h3{font-size:21px;font-weight:500;line-height:1.25;margin:12px 0}
+.g-treatment p{font-size:12px;margin:0 0 18px}
+.g-treatment a{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:700;padding-top:15px;border-top:1px solid var(--border);margin-top:auto}
+.g-gallery-empty{display:flex;align-items:center;gap:30px;min-height:210px;background:#efeee6;border:1px dashed #c6cdbd;border-radius:8px;padding:45px}
+.g-gallery-empty h3{font-size:26px;font-weight:500;margin:0}
+.g-gallery-empty p{max-width:540px;font-size:13px}
+.g-gallery-empty>span{margin-left:auto;font-size:9px;letter-spacing:2px;border-left:1px solid #c9cebf;padding-left:35px;flex-shrink:0}
+.g-smile-grid{display:grid;gap:32px}
+.g-case{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:center;background:#f0f1eb;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.g-case-photo{margin:0;padding:24px;background:#e6e9e0}
+.g-case-photo>a{display:block;border-radius:6px;overflow:hidden}
+.g-case-photo img{display:block;width:100%;height:auto}
+.g-case-photo figcaption{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:16px;font-size:11px;font-weight:700;color:var(--ink)}
+.g-case-photo figcaption a{display:inline-flex;align-items:center;gap:5px;font-weight:500;text-decoration:underline;text-underline-offset:3px}
+.g-case-story{padding:clamp(24px,4vw,56px)}
+.g-case-story h3{font-size:clamp(32px,3.3vw,46px);font-weight:500;line-height:1.15;margin:16px 0 20px}
+.g-case-story>p{font-size:14px;line-height:1.85;margin:0}
+.g-case-stages{list-style:none;padding:0;margin:30px 0}
+.g-case-stages li{display:flex;align-items:center;gap:18px;padding:18px 0;border-top:1px solid #d3dace}
+.g-case-stages li>span{display:grid;place-items:center;width:36px;height:36px;flex-shrink:0;border:1px solid #c6d1c3;border-radius:50%;font-size:11px;color:var(--accent)}
+.g-case-stages h4{margin:0;font-size:14px;font-weight:700}
+.g-case-stages p{margin:4px 0 0;font-size:12px}
+.g-case-story>small{display:block;margin-top:22px;max-width:320px;font-size:11px;line-height:1.7;color:var(--muted)}
+.g-case-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:24px}
+.g-case-pair figure{margin:0;min-width:0}
+.g-case-pair img{width:100%;height:auto;object-fit:cover;border-radius:6px}
+.g-case-pair figcaption{text-transform:capitalize;font-size:12px;margin-top:8px}
+.g-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:760px){.g-case{grid-template-columns:1fr}.g-case-photo{padding:16px}.g-case-story{padding:28px 24px}.g-case-story>small{max-width:none}}
+.g-journey{background:#204840;color:#fff}
+.g-journey h2,.g-journey h3{color:#f6f4e9}
+.g-journey .g-eyebrow{color:#c7d4b9}
+.g-journey p{color:#c1d0c6}
+.g-step-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:40px;margin-top:50px}
+.g-step-grid article>div{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ffffff30;padding-bottom:24px}
+.g-step-grid article>div span{font:italic 32px Georgia,serif;color:#aabd9c}
+.g-step-grid h3{font-size:21px;font-weight:400;line-height:1.3;margin-top:25px}
+.g-step-grid p{font-size:12px}
+.g-dentist-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:25px}
+.g-dentist{border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.g-dentist-photo{position:relative;height:300px;background:#e7ebe2;display:grid;place-items:center;font:60px Georgia,serif;color:#748977}
+.g-dentist-photo img{position:absolute;width:100%;height:100%;object-fit:cover}
+.g-dentist-body{padding:24px}
+.g-dentist h3{font-size:25px;font-weight:500;margin:10px 0}
+.g-dentist p{font-size:12px}
+.g-dentist .g-actions{margin-top:23px;gap:8px}
+.g-dentist .g-button{padding:9px 11px;font-size:10px;gap:6px}
+.g-empty{border:1px solid var(--border);padding:32px;border-radius:8px;font-size:14px}
+.g-empty a{text-decoration:underline;white-space:nowrap}
+.g-skeleton{min-height:330px;background:linear-gradient(100deg,#e8ebe3,#f6f6f1,#e8ebe3);border-radius:8px;padding:30px}
+.g-appointment{background:#e5e9dc;border-radius:9px;padding:56px 64px;display:flex;align-items:center;justify-content:space-between;gap:40px}
+.g-appointment h2{font-size:clamp(36px,4vw,56px);line-height:1.12;font-weight:500;margin:20px 0}
+.g-appointment p{font-size:13px}
+.g-appointment-actions{display:grid;gap:20px}
+.g-appointment-actions>a:not(.g-button){display:flex;gap:8px;align-items:center;font-size:12px}
+.g-appointment-actions small{font-size:10px;color:var(--muted);text-align:center}
+.g-testimonials>.g-section-heading{text-align:center;margin-inline:auto}
+.g-review-empty{text-align:center;display:flex;flex-direction:column;align-items:center;gap:16px}
+.g-review-empty p{font:26px Georgia,serif;margin:0;color:var(--ink)}
+.g-review-empty>span{font-size:12px;color:var(--muted)}
+.g-review-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.g-review{margin:0;background:#efeee6;border-radius:8px;padding:30px}
+.g-review p{font-size:14px}
+.g-review footer{display:flex;gap:10px;align-items:center}
+.g-contact{background:#f0f1eb}
+.g-contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.g-contact-grid>div>a{display:block;font-size:14px;margin-block:8px}
+.g-contact h3{font-size:18px;margin-bottom:0}
+.g-contact p{font-size:13px}
+.g-contact .g-actions{margin-top:25px}
+.g-contact iframe{width:100%;height:390px;border:1px solid var(--border);border-radius:8px}
+.g-footer{background:#173c36;color:#d2dfd5;padding-top:65px}
+.g-footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:55px;padding-bottom:55px}
+.g-footer-grid a{display:block;font-size:11px;margin:10px 0}
+.g-footer-grid p{font-size:11px;color:#b5c6bb}
+.g-footer-grid h3{font-family:inherit;color:#fff;font-size:12px;font-weight:600;margin:0 0 20px}
+.g-footer-grid .g-footer-brand{font:32px Georgia,serif;color:#f7f1df;margin:0}
+.g-footer-brand span{display:block;font:9px 'Manrope',sans-serif;letter-spacing:4px;text-transform:uppercase;margin-top:7px}
+.g-footer-bottom{border-top:1px solid #ffffff20;display:flex;justify-content:space-between;gap:20px;padding-block:24px;font-size:9px;color:#b5c6bb}
+.g-footer-bottom>div{display:flex;gap:24px}
+.g-legal{min-height:50vh;max-width:800px}
+.g-legal h1{font-size:46px}
+
+/* Reuse all existing form, authorization, scheduling, and dashboard markup. */
+.auth-page{min-height:65vh;align-items:center;background:linear-gradient(135deg,#eef0e7,#faf9f5);border-radius:16px}
+.auth-form{max-width:460px;padding:40px;border:1px solid var(--border);box-shadow:var(--shadow)}
+.auth-form h2{font-size:32px}
+.auth-form label{font-size:13px}
+.auth-form input,.auth-form select,.contact-form input,.contact-form textarea,.appointment-form input,.appointment-form textarea,.manager-form input,.manager-form textarea{padding:12px;border:1px solid var(--border);border-radius:6px;background:#fff;font-size:14px}
+.auth-form .primary{width:100%}
+.auth-form p{font-size:12px}
+.book-page>h2,.manager-page>h2,.patient-dashboard>h2,.doctor-dashboard>h2,.admin-dashboard>h2,.contact-page>h2{font-size:38px;font-weight:500}
+.booking-panel,.doctor-card,.checkout-card,.appointment-form,.admin-card,.contact-form,.contact-info,.profile-card,.appointment-card{border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow);background:#fff}
+.booking-panel{padding:28px}
+.doctor-card{padding:22px}
+.doctor-meta p{font-size:12px}
+.doctor-photo{box-shadow:none}
+.times button{border-radius:6px;min-height:44px}
+.times button.active{background:var(--accent);color:#fff}
+.manager-table{display:block;max-width:100%;overflow-x:auto}
+.manager-table th{background:#e8eddf}
+.manager-table td{font-size:13px}
+.manager-table button{min-height:36px}
+.patient-dashboard li{gap:20px;flex-wrap:wrap}
+.admin-card:hover{border-color:var(--accent);box-shadow:var(--shadow)}
+.form-error{overflow-wrap:anywhere}
+main input,main select,main textarea{max-width:100%}
+.g-hero-copy{animation:g-enter .6s ease-out}
+@keyframes g-enter{from{opacity:0;transform:translateY(12px)}
+to{opacity:1;transform:translateY(0)}
+}
+
+@media(min-width:1600px){.g-hero-grid{min-height:700px}
+.g-hero h1{font-size:76px}
+}
+
+@media(max-width:1200px){.g-nav{gap:12px}
+.g-nav-shell{width:calc(100% - 40px);gap:20px}
+.g-brand>span{font-size:19px}
+.g-brand img{width:38px;height:38px}
+.g-account{padding-left:10px}
+.g-container{width:calc(100% - 64px)}
+.g-about{gap:45px}
+.g-treatment-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g-trust>div{padding-inline:15px}
+.g-footer-grid{gap:30px}
+}
+
+@media(max-width:1050px){.g-menu-toggle{display:grid;place-items:center;background:none;border:1px solid var(--border);border-radius:5px;width:44px;height:44px;color:var(--ink)}
+.g-nav{position:absolute;top:100%;left:0;right:0;background:#faf9f5;border-bottom:1px solid var(--border);padding:20px 32px 30px;display:flex;flex-direction:column;align-items:stretch;gap:4px;max-height:calc(100dvh - 100px);overflow-y:auto;visibility:hidden;opacity:0;transform:translateY(-8px);pointer-events:none;transition:opacity .2s,transform .2s,visibility .2s}
+.g-nav.is-open{visibility:visible;opacity:1;transform:translateY(0);pointer-events:auto}
+.g-nav a{font-size:14px}
+.g-account{padding:15px 0;border:0;gap:20px}
+.g-account button{font-size:14px;min-height:40px}
+.g-nav-shell{min-height:78px}
+.g-topbar{padding-inline:32px}
+.g-dentist-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g-gallery-empty>span{display:none}
+.g-trust{grid-template-columns:repeat(2,1fr);gap:25px}
+.g-trust>div:nth-child(2){border:0}
+.g-trust>div:nth-child(3){padding-left:0}
+.g-hero-grid{gap:25px;min-height:550px}
+.g-hero-image{min-height:450px}
+.g-hero h1{letter-spacing:-2px}
+.g-step-grid{gap:25px}
+.g-contact-grid{gap:40px}
+}
+
+@media(max-width:760px){.g-container{width:calc(100% - 40px)}
+.g-section{padding-block:64px}
+.g-topbar{padding-inline:20px;font-size:8px}
+.g-nav-shell{width:calc(100% - 40px)}
+.g-hero-grid{grid-template-columns:1fr;padding-top:30px;gap:25px;padding-bottom:30px}
+.g-hero-copy{padding-block:10px}
+.g-hero h1{font-size:clamp(45px,9vw,65px);margin:20px 0}
+.g-hero-copy>p{max-width:430px}
+.g-hero-note{margin-top:25px}
+.g-hero-image{min-height:360px}
+.g-hero-image>img{border-radius:90px 8px 8px 8px}
+.g-image-note{left:12px;right:12px;bottom:32px;padding:16px}
+.g-about{grid-template-columns:1fr;gap:36px}
+.g-about-media img{height:350px}
+.g-section-row{display:block}
+.g-section-row>.g-button{margin:-10px 0 30px}
+.g-treatment-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.g-treatment>img{height:160px}
+.g-treatment>div{padding:18px}
+.g-treatment h3{font-size:21px}
+.g-gallery-empty{padding:28px;gap:20px}
+.g-gallery-empty>svg{display:none}
+.g-step-grid{grid-template-columns:1fr 1fr;gap:30px}
+.g-appointment{padding:36px;flex-direction:column;align-items:flex-start;gap:20px}
+.g-appointment-actions{width:100%}
+.g-contact-grid{grid-template-columns:1fr}
+.g-contact iframe{height:300px}
+.g-footer-grid{grid-template-columns:1fr 1fr;gap:35px}
+.g-footer-bottom{flex-direction:column;font-size:10px}
+.g-review-grid{grid-template-columns:1fr}
+.g-dentist-grid{grid-template-columns:1fr}
+.g-dentist-photo{height:340px}
+.g-trust span{font-size:11px}
+.g-trust small{font-size:9px}
+.g-trust strong{font-size:29px}
+main>section:not(.g-section){width:calc(100% - 32px);margin:28px auto 48px}
+.auth-page{padding:16px}
+.auth-form{padding:26px}
+.booking-grid,.doctor-profile,.checkout-layout,.contact-grid,.admin-grid{grid-template-columns:minmax(0,1fr)}
+.booking-panel{padding:20px}
+.doctor-card-main{min-width:0}
+.doctor-meta{min-width:0}
+.doctor-meta h3{overflow-wrap:anywhere}
+.manager-form{max-width:100%}
+.g-empty a{white-space:normal}
+}
+
+@media(max-width:420px){.g-treatment-grid{grid-template-columns:1fr}
+.g-treatment>img{height:210px}
+.g-trust>div{gap:9px;padding-inline:9px}
+.g-trust svg{width:23px!important}
+.g-step-grid{gap:20px}
+.g-step-grid h3{font-size:19px}
+.g-footer-grid{gap:25px 15px}
+.g-hero .g-actions{align-items:stretch;flex-direction:column}
+.g-hero-image{min-height:290px}
+.g-hero h1{font-size:44px}
+.g-topbar>span{max-width:160px;overflow:hidden;white-space:nowrap}
+}
+
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}
+*,*:before,*:after{animation:none!important;transition:none!important}
+}
+
+
+.auth-form label > span { display: block; margin-top: 0.3rem; font-size: 12px; }
+.auth-form [aria-invalid="true"] { border-color: #d32f2f; }
+
+.auth-form textarea { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid var(--border); border-radius: 6px; background: #fff; font: inherit; resize: vertical; }
+.auth-form textarea[aria-invalid="true"] { border-color: #d32f2f; }
+
+.auth-password-field { margin-bottom: 1rem; }
+.auth-form .auth-password-field label { margin-bottom: 0; }
+.auth-password-control { position: relative; }
+.auth-form .auth-password-control input { padding-right: 48px; }
+.auth-password-toggle { position: absolute; right: 2px; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 4px; background: transparent; color: var(--ink); cursor: pointer; }
+.auth-password-toggle:hover { background: #eef0e7; }
+.auth-password-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: -3px; }
+.auth-password-field > .form-error { display: block; }

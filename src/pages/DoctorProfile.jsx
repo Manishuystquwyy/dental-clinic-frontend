@@ -1,7 +1,7 @@
 import { clinicToday, isFutureSlot } from '../utils/bookingTime'
 import useBookingNow from '../hooks/useBookingNow'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 import AppointmentForm from '../components/AppointmentForm'
 import { getDentist } from '../api/dentists'
 import { getAppointmentAvailability } from '../api/appointments'
@@ -10,6 +10,7 @@ import { resolvePictureUrl } from '../utils/media'
 
 export default function DoctorProfile() {
   const { id } = useParams()
+  const { hash } = useLocation()
   const [doc, setDoc] = useState(null)
   const [error, setError] = useState('')
   const [date, setDate] = useState('')
@@ -21,6 +22,10 @@ export default function DoctorProfile() {
   const now = useBookingNow()
   const today = clinicToday(now)
   const futureSlots = availableSlots.filter((slot) => isFutureSlot(date, slot, now))
+
+  useEffect(() => {
+    if (doc && hash === '#booking') document.getElementById('booking')?.scrollIntoView()
+  }, [doc, hash])
 
   const timeSlots = ['10:30', '11:00', '14:00', '14:30', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00']
 
@@ -42,6 +47,7 @@ export default function DoctorProfile() {
     let active = true
 
     if (!date) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Clear stale availability immediately when the date is reset.
       setAvailableSlots([])
       setAvailabilityError('')
       return () => { active = false }
@@ -96,7 +102,7 @@ export default function DoctorProfile() {
           </div>
         </div>
         <hr />
-        <h3>Availability</h3>
+        <h3 id="booking">Availability</h3>
         <div>
           <DatePicker
             label="Choose date"

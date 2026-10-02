@@ -27,7 +27,7 @@ async function authenticatedFetch(path, options) {
   const res = await fetch(buildUrl(path), {
     ...fetchOptions,
     headers: {
-      ...(options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
+      ...(typeof options.body === 'string' ? { 'Content-Type': 'application/json' } : {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(headers || {}),
     },
@@ -55,12 +55,17 @@ async function readResponse(res) {
 
     const message =
       (typeof data === 'string' ? data : null) ||
-      validationMessage ||
       data?.message ||
       data?.error ||
+      validationMessage ||
       res.statusText ||
       'Request failed'
-    throw new Error(message)
+    const error = new Error(message)
+    error.status = res.status
+    if (res.status === 400 && data && typeof data === 'object' && !Array.isArray(data) && !data.message && !data.error) {
+      error.fieldErrors = Object.fromEntries(Object.entries(data).filter(([, value]) => typeof value === 'string'))
+    }
+    throw error
   }
 
   return data

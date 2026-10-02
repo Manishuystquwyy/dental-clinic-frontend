@@ -40,6 +40,7 @@ export default function Book() {
     let active = true
 
     if (!selected || !selectedDate) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- Clear stale availability immediately when selection is reset.
       setAvailableSlots([])
       return () => { active = false }
     }

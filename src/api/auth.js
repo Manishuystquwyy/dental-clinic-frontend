@@ -31,3 +31,10 @@ export function resetPassword(payload) {
     body: JSON.stringify(payload),
   })
 }
+
+export function googleLogin(credential, profile) {
+  return apiFetch('/auth/google', {
+    method: 'POST',
+    body: JSON.stringify({ credential, profile }),
+  })
+}

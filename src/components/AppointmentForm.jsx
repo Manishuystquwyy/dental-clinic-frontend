@@ -1,3 +1,4 @@
+import { useNotifications } from '../context/NotificationContext'
 import { isFutureSlot } from '../utils/bookingTime'
 import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -6,6 +7,7 @@ import { useAuth } from '../context/AuthContext'
 import { savePendingBooking } from '../utils/bookingCheckout'
 
 export default function AppointmentForm({ doctor, date, time }) {
+  const { notify } = useNotifications()
   const { user } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
@@ -58,7 +60,7 @@ export default function AppointmentForm({ doctor, date, time }) {
         setGuestName('')
         setGuestPhone('')
         setGuestMessage('')
-        alert('Your booking request has been sent. We will contact you shortly.')
+        notify('Your booking request has been sent. We will contact you shortly.', { title: 'Request received' })
       } catch (err) {
         setError(err.message || 'Unable to send booking request.')
       } finally {
