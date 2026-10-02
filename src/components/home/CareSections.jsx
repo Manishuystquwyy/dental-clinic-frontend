@@ -17,7 +17,52 @@ export function TreatmentsSection() {
   return <section className="g-section g-treatments-section" id="treatments"><div className="g-container"><div className="g-section-row"><SectionHeading eyebrow="CARE FOR EVERY SMILE" title="Your smile. Your kind of care.">Every smile has different needs. Find the right place to begin.</SectionHeading><Button to="/services" variant="outline">View all treatments</Button></div><div className="g-treatment-grid">{[3,6,1,8,7,4,10,5].map(i => <TreatmentCard key={i} index={i} service={services[i]} />)}</div></div></section>
 }
 export function SmileGallery({ cases = smileCases }) {
-  return <section className="g-section g-container" id="smiles"><div className="g-section-row"><SectionHeading eyebrow="SMALL CHANGES. MEANINGFUL CONFIDENCE." title="Every smile has a story.">Thoughtful treatment, planned around the person behind the smile.</SectionHeading><Button to="/book" variant="outline">Explore your options</Button></div><div className="g-smile-grid">{cases.length ? cases.map(item => <article className="g-case" key={item.id}><div className="g-case-pair">{['before','after'].map(phase => <figure key={phase}><img src={item[phase]} alt={`${phase} ${item.title}`} width="500" height="350" loading="lazy" /><figcaption>{phase}</figcaption></figure>)}</div><h3>{item.title}</h3><p>{item.description}</p></article>) : <div className="g-gallery-empty"><ScanLine size={42} strokeWidth={1} /><div><h3>Real smiles deserve real stories.</h3><p>Our before & after gallery is coming soon. Only patient-approved treatment photographs will be featured here.</p></div><span>BEFORE & AFTER<br />GALLERY COMING SOON</span></div>}</div></section>
+  return (
+    <section className="g-section g-container" id="smiles" aria-label="Before and after gallery">
+      <div className="g-section-row">
+        <SectionHeading eyebrow="BEFORE & AFTER GALLERY" title="Every smile has a story.">
+          Thoughtful treatment, planned around the person behind the smile.
+        </SectionHeading>
+        <Button to="/book" variant="outline">Explore your options</Button>
+      </div>
+      <div className="g-smile-grid">
+        {cases.length ? cases.map(item => (
+          <article className="g-case" key={item.id}>
+            {item.image ? (
+              <figure className="g-case-photo">
+                <a href={item.image} target="_blank" rel="noopener noreferrer" aria-label="View full before and after photograph (opens in a new tab)">
+                  <img src={item.image} alt={item.imageAlt} width="1272" height="1575" loading="lazy" decoding="async" />
+                </a>
+                <figcaption>Before & after <a href={item.image} target="_blank" rel="noopener noreferrer">View full photo <ArrowUpRight size={14} aria-hidden="true" /><span className="g-sr-only"> (opens in a new tab)</span></a></figcaption>
+              </figure>
+            ) : (
+              <div className="g-case-pair">
+                {['before', 'after'].map(phase => (
+                  <figure key={phase}>
+                    <img src={item[phase]} alt={`${phase} ${item.title}`} width="500" height="350" loading="lazy" />
+                    <figcaption>{phase}</figcaption>
+                  </figure>
+                ))}
+              </div>
+            )}
+            <div className="g-case-story">
+              <span className="g-eyebrow">A PATIENT’S SMILE JOURNEY</span>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+              <ol className="g-case-stages">
+                <li><span>01</span><div><h4>Before treatment</h4><p>Where the smile journey began.</p></div></li>
+                <li><span>02</span><div><h4>After treatment</h4><p>A closer look at the final smile.</p></div></li>
+              </ol>
+              <Button to="/book" variant="outline">Start your smile journey</Button>
+              <small>Every smile is unique. Treatment options and results vary for each patient.</small>
+            </div>
+          </article>
+        )) : (
+          <div className="g-gallery-empty"><ScanLine size={42} strokeWidth={1} /><div><h3>Real smiles deserve real stories.</h3><p>Our before & after gallery is coming soon. Only patient-approved treatment photographs will be featured here.</p></div><span>BEFORE & AFTER<br />GALLERY COMING SOON</span></div>
+        )}
+      </div>
+    </section>
+  )
 }
 export function WhyChooseUs() {
   const steps = [[<ScanLine size={28} strokeWidth={1.3} />,'Consultation & diagnosis','We listen to your concerns and assess your oral health.'],[<ClipboardList size={28} strokeWidth={1.3} />,'A plan made for you','Understand your options, treatment stages, and pricing.'],[<CalendarCheck size={28} strokeWidth={1.3} />,'Your appointment','Choose an available slot and take the next step with your dentist.'],[<HeartHandshake size={28} strokeWidth={1.3} />,'Care that continues','Get guidance for recovery and long-term oral health.']]
