@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { clinic } from '../data/clinic'
 import { createPublicRequest } from '../api/publicRequests'
 
 export default function Contact() {
@@ -82,7 +83,7 @@ export default function Contact() {
 
         <div className="contact-info">
           <h3>Clinic Details</h3>
-          <p>Phone: +91 98765 43210</p>
+          <p><a href={clinic.phoneHref}>{clinic.phone}</a></p><p>{clinic.address}</p><p>{clinic.hours}</p>
           <p>Email: info@gayatridental.com</p>
           <p>Share your phone number and a short message, and our team will call you back.</p>
         </div>

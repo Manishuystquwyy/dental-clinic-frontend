@@ -1,32 +1,34 @@
-import { StrictMode } from 'react'
+import { lazy, StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
 import { AuthProvider } from './context/AuthContext'
-import Home from './pages/Home'
-import About from './pages/About'
-import Doctors from './pages/Doctors'
-import DoctorProfile from './pages/DoctorProfile'
-import Services from './pages/Services'
-import Contact from './pages/Contact'
-import Testimonials from './pages/Testimonials'
-import Book from './pages/Book'
-import Appointments from './pages/Appointments'
-import DoctorDashboard from './pages/DoctorDashboard'
-import PatientDashboard from './pages/PatientDashboard'
-import MyProfile from './pages/MyProfile'
-import Login from './pages/Login'
-import Signup from './pages/Signup'
-import ForgotPassword from './pages/ForgotPassword'
-import ResetPassword from './pages/ResetPassword'
-import Checkout from './pages/Checkout'
 import ProtectedRoute from './components/ProtectedRoute'
-import AdminLogin from './admin/Login'
-import AdminDashboard from './admin/Dashboard'
-import DoctorsManager from './admin/DoctorsManager'
-import ServicesManager from './admin/ServicesManager'
-import AppointmentsManager from './admin/Appointments'
+
+const Legal = lazy(() => import('./pages/Legal'))
+const Home = lazy(() => import('./pages/Home'))
+const About = lazy(() => import('./pages/About'))
+const Doctors = lazy(() => import('./pages/Doctors'))
+const DoctorProfile = lazy(() => import('./pages/DoctorProfile'))
+const Services = lazy(() => import('./pages/Services'))
+const Contact = lazy(() => import('./pages/Contact'))
+const Testimonials = lazy(() => import('./pages/Testimonials'))
+const Book = lazy(() => import('./pages/Book'))
+const Appointments = lazy(() => import('./pages/Appointments'))
+const DoctorDashboard = lazy(() => import('./pages/DoctorDashboard'))
+const PatientDashboard = lazy(() => import('./pages/PatientDashboard'))
+const MyProfile = lazy(() => import('./pages/MyProfile'))
+const Login = lazy(() => import('./pages/Login'))
+const Signup = lazy(() => import('./pages/Signup'))
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'))
+const ResetPassword = lazy(() => import('./pages/ResetPassword'))
+const Checkout = lazy(() => import('./pages/Checkout'))
+const AdminLogin = lazy(() => import('./admin/Login'))
+const AdminDashboard = lazy(() => import('./admin/Dashboard'))
+const DoctorsManager = lazy(() => import('./admin/DoctorsManager'))
+const ServicesManager = lazy(() => import('./admin/ServicesManager'))
+const AppointmentsManager = lazy(() => import('./admin/Appointments'))
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -35,6 +37,8 @@ createRoot(document.getElementById('root')).render(
         <Routes>
           <Route path="/" element={<App />}>
             <Route index element={<Home />} />
+            <Route path="privacy" element={<Legal />} />
+            <Route path="terms" element={<Legal />} />
             <Route path="about" element={<About />} />
             <Route path="doctors" element={<Doctors />} />
             <Route path="doctors/:id" element={<DoctorProfile />} />

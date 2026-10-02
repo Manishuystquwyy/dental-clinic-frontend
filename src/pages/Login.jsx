@@ -1,8 +1,11 @@
+import GoogleSignIn from '../components/GoogleSignIn'
+import { useNotifications } from '../context/NotificationContext'
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 export default function Login() {
+  const { notify } = useNotifications()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
@@ -18,7 +21,7 @@ export default function Login() {
     setSubmitting(true)
     try {
       await login(email, password)
-      alert('Logged in successfully!')
+      notify('Welcome back to Gayatri Dental Clinic.', { title: 'Signed in' })
       navigate(redirectTo)
     } catch (err) {
       setError(err.message || 'Login failed.')
@@ -29,7 +32,8 @@ export default function Login() {
 
   return (
     <section className="auth-page">
-      <form className="auth-form" onSubmit={handleSubmit}>
+      <div className="auth-form">
+      <form onSubmit={handleSubmit}>
         <h2>Login</h2>
         
         <label>
@@ -53,6 +57,11 @@ export default function Login() {
           Don't have an account? <a href="/signup">Sign up</a>
         </p>
       </form>
+      <GoogleSignIn disabled={submitting} onSuccess={() => {
+        notify('Welcome to Gayatri Dental Clinic.', { title: 'Signed in' })
+        navigate(redirectTo, { replace: true })
+      }} />
+      </div>
     </section>
   )
 }

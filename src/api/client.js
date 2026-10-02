@@ -15,18 +15,28 @@ function buildUrl(path) {
 }
 
 export async function apiFetch(path, options = {}) {
-  const token = getAuthToken()
-  const res = await fetch(buildUrl(path), {
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(options.headers || {}),
-    },
-    ...options,
-  })
-
+  const res = await authenticatedFetch(path, options)
+  if (options.responseType === 'blob') return res.blob()
   if (res.status === 204) return null
+  return readResponse(res)
+}
 
+async function authenticatedFetch(path, options) {
+  const token = getAuthToken()
+  const { headers, responseType: _responseType, ...fetchOptions } = options
+  const res = await fetch(buildUrl(path), {
+    ...fetchOptions,
+    headers: {
+      ...(typeof options.body === 'string' ? { 'Content-Type': 'application/json' } : {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(headers || {}),
+    },
+  })
+  if (!res.ok) await readResponse(res)
+  return res
+}
+
+async function readResponse(res) {
   const text = await res.text()
   let data = null
   if (text) {
@@ -45,12 +55,17 @@ export async function apiFetch(path, options = {}) {
 
     const message =
       (typeof data === 'string' ? data : null) ||
-      validationMessage ||
       data?.message ||
       data?.error ||
+      validationMessage ||
       res.statusText ||
       'Request failed'
-    throw new Error(message)
+    const error = new Error(message)
+    error.status = res.status
+    if (res.status === 400 && data && typeof data === 'object' && !Array.isArray(data) && !data.message && !data.error) {
+      error.fieldErrors = Object.fromEntries(Object.entries(data).filter(([, value]) => typeof value === 'string'))
+    }
+    throw error
   }
 
   return data

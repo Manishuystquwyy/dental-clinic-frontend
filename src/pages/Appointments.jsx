@@ -1,9 +1,19 @@
+import { useNotifications } from '../context/NotificationContext'
 import { useEffect, useMemo, useState } from 'react'
 import { getAppointments, updateAppointment } from '../api/appointments'
 import { getDentists } from '../api/dentists'
 import { useAuth } from '../context/AuthContext'
 
+function sortAppointmentsDescending(appointments) {
+  return [...appointments].sort((left, right) => {
+    const leftDateTime = `${left.appointmentDate || ''}T${left.appointmentTime || ''}`
+    const rightDateTime = `${right.appointmentDate || ''}T${right.appointmentTime || ''}`
+    return rightDateTime.localeCompare(leftDateTime)
+  })
+}
+
 export default function Appointments() {
+  const { notify, confirmAction } = useNotifications()
   const [appts, setAppts] = useState([])
   const [dentists, setDentists] = useState([])
   const [error, setError] = useState('')
@@ -24,7 +34,7 @@ export default function Appointments() {
           (a) => a.patientId === Number(user.patientId)
         )
 
-        setAppts(mine)
+        setAppts(sortAppointmentsDescending(mine))
         setDentists(dentistsData || [])
       })
       .catch((err) => {
@@ -54,9 +64,10 @@ export default function Appointments() {
   }, [dentists])
 
   async function cancel(appt) {
-    const confirmed = window.confirm(
-      'Are you sure you want to cancel this appointment?'
-    )
+    const confirmed = await confirmAction({
+      title: 'Cancel appointment?',
+      message: 'Are you sure you want to cancel this appointment? You can book a new time when you are ready.',
+    })
 
     if (!confirmed) return
 
@@ -74,7 +85,7 @@ export default function Appointments() {
         prev.map((a) => (a.id === appt.id ? updated : a))
       )
     } catch (err) {
-      alert(err.message || 'Unable to cancel appointment.')
+      notify(err.message || 'Unable to cancel appointment.', { title: 'Cancellation failed', tone: 'error' })
     }
   }
 

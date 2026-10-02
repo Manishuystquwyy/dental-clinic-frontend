@@ -1,7 +1,18 @@
 import { apiFetch } from './client'
 
+const pendingDentistRequests = new Map()
+
 export function getDentists() {
-  return apiFetch('/dentists')
+  // Share concurrent loads (including StrictMode's effect replay), without
+  // caching completed results or sharing a request across login changes.
+  const token = localStorage.getItem('gayatri_token')
+  if (!pendingDentistRequests.has(token)) {
+    const request = apiFetch('/dentists').finally(() => {
+      pendingDentistRequests.delete(token)
+    })
+    pendingDentistRequests.set(token, request)
+  }
+  return pendingDentistRequests.get(token)
 }
 
 export function getDentist(id) {
