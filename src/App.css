@@ -1545,3 +1545,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     grid-template-columns: 1fr;
   }
 }
+
+.google-sign-in { margin-top: 1rem; }
+.google-sign-in-divider { text-align: center; color: var(--text-muted, #666); }
+.google-profile-fields { border: 0; padding: 0; margin: 0; display: grid; gap: 1rem; min-width: 0; }

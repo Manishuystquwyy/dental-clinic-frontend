@@ -1,3 +1,4 @@
+import GoogleSignIn from '../components/GoogleSignIn'
 import { useNotifications } from '../context/NotificationContext'
 import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -31,7 +32,8 @@ export default function Login() {
 
   return (
     <section className="auth-page">
-      <form className="auth-form" onSubmit={handleSubmit}>
+      <div className="auth-form">
+      <form onSubmit={handleSubmit}>
         <h2>Login</h2>
         
         <label>
@@ -55,6 +57,11 @@ export default function Login() {
           Don't have an account? <a href="/signup">Sign up</a>
         </p>
       </form>
+      <GoogleSignIn disabled={submitting} onSuccess={() => {
+        notify('Welcome to Gayatri Dental Clinic.', { title: 'Signed in' })
+        navigate(redirectTo, { replace: true })
+      }} />
+      </div>
     </section>
   )
 }
