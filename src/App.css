@@ -1387,6 +1387,35 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   text-align: right;
 }
 
+.appointments-page .appointment-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.reschedule-btn {
+  border: 1px solid #b9dedd;
+  padding: 9px 15px;
+  border-radius: 8px;
+  background: #e9f8f8;
+  color: #176d6e;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.reschedule-btn:hover:not(:disabled) {
+  background: #176d6e;
+  color: #fff;
+}
+
+.reschedule-btn:focus-visible,
+.cancel-btn:focus-visible {
+  outline: 3px solid #159a9c;
+  outline-offset: 3px;
+}
+
 .cancel-btn {
   border: 0;
   padding: 9px 15px;
@@ -1398,9 +1427,22 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   transition: 0.2s;
 }
 
-.cancel-btn:hover {
+.cancel-btn:hover:not(:disabled) {
   background: #c53030;
   color: white;
+}
+
+.appointments-page .reschedule-btn:disabled,
+.appointments-page .cancel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.appointment-change-policy {
+  margin: 12px 0 0;
+  color: #52606d;
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 /* Cancelled */

@@ -11,6 +11,10 @@ export function getAppointments() {
   return apiFetch('/appointments')
 }
 
+export function getAppointmentPolicy() {
+  return apiFetch('/appointments/policy')
+}
+
 export function getMyDoctorAppointments() {
   return apiFetch('/doctors/me/appointments')
 }

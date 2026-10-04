@@ -1,8 +1,7 @@
-import { useNotifications } from '../context/NotificationContext'
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { getAppointments, updateAppointment } from '../api/appointments'
+import { getAppointments } from '../api/appointments'
 import { getDentists } from '../api/dentists'
 import PatientMedicalRecords from '../components/PatientMedicalRecords'
 
@@ -15,7 +14,6 @@ function sortAppointmentsDescending(appointments) {
 }
 
 export default function PatientDashboard() {
-  const { notify } = useNotifications()
   const { user } = useAuth()
   const [appts, setAppts] = useState([])
   const [dentists, setDentists] = useState([])
@@ -49,22 +47,6 @@ export default function PatientDashboard() {
     return map
   }, [dentists])
 
-  async function cancelAppt(appt) {
-    try {
-      const updated = await updateAppointment(appt.id, {
-        patientId: appt.patientId,
-        dentistId: appt.dentistId,
-        appointmentDate: appt.appointmentDate,
-        appointmentTime: appt.appointmentTime,
-        status: 'CANCELLED',
-        remarks: appt.remarks || null,
-      })
-      setAppts((prev) => prev.map((a) => (a.id === appt.id ? updated : a)))
-    } catch (err) {
-      notify(err.message || 'Unable to cancel appointment.', { title: 'Cancellation failed', tone: 'error' })
-    }
-  }
-
   return (
     <section className="patient-dashboard">
       <h2>Patient Dashboard</h2>
@@ -81,9 +63,6 @@ export default function PatientDashboard() {
             <Link className="appointment-dentist-link" to="/appointments">
               {dentistById.get(a.dentistId)?.name || `Dentist #${a.dentistId}`}
             </Link> — {a.appointmentDate} {a.appointmentTime} ({a.status})
-            {a.status !== 'CANCELLED' && a.status !== 'COMPLETED' && (
-              <button onClick={() => cancelAppt(a)}>Cancel</button>
-            )}
           </li>
         ))}
       </ul>

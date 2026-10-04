@@ -19,3 +19,22 @@ export function isFutureSlot(date, time, now = new Date()) {
   const slotTime = time.length === 5 ? `${time}:00` : time
   return `${date}T${slotTime}` > clinicDateTime(now)
 }
+
+// Online changes close the configured number of hours before the original appointment starts in India.
+// Appointment status is checked by callers independently of this timing rule.
+export function canChangeAppointmentOnline(appointment, cutoffHours, now = new Date()) {
+  const date = appointment?.appointmentDate
+  const time = appointment?.appointmentTime
+  if (typeof date !== 'string' || !/^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/.test(date)
+    || typeof time !== 'string' || !/^([01]\d|2[0-3]):[0-5]\d(?::[0-5]\d)?$/.test(time)
+    || !(now instanceof Date) || !Number.isFinite(now.getTime())
+    || !Number.isSafeInteger(cutoffHours) || cutoffHours < 0) return false
+
+  // Date.parse normalizes some impossible dates, so reject those explicitly.
+  const dateInstant = Date.parse(`${date}T00:00:00Z`)
+  if (!Number.isFinite(dateInstant) || new Date(dateInstant).toISOString().slice(0, 10) !== date) return false
+
+  const normalizedTime = time.length === 5 ? `${time}:00` : time
+  const startsAt = Date.parse(`${date}T${normalizedTime}+05:30`)
+  return Number.isFinite(startsAt) && now.getTime() <= startsAt - cutoffHours * 60 * 60 * 1000
+}
