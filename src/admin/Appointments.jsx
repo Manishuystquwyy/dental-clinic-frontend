@@ -5,6 +5,8 @@ import { getDentists } from '../api/dentists'
 import { getPatients } from '../api/patients'
 import useBookingNow from '../hooks/useBookingNow'
 import { canCompleteAppointment } from '../utils/appointmentStatus'
+import { canChangeAppointmentOnline } from '../utils/bookingTime'
+import useAppointmentPolicy from '../hooks/useAppointmentPolicy'
 
 export default function AppointmentsManager() {
   const [appts, setAppts] = useState([])
@@ -13,6 +15,10 @@ export default function AppointmentsManager() {
   const [error, setError] = useState('')
   const [updatingId, setUpdatingId] = useState(null)
   const now = useBookingNow()
+  const { policy, loading: policyLoading, error: policyError, retry: retryPolicy } = useAppointmentPolicy()
+  const cancellationMessage = policy
+    ? `Online cancellation closes ${policy.cancellationCutoffHours} ${policy.cancellationCutoffHours === 1 ? 'hour' : 'hours'} before the scheduled appointment starts.`
+    : 'The clinic appointment policy is unavailable. Please try again.'
 
   useEffect(() => {
     let active = true
@@ -41,6 +47,10 @@ export default function AppointmentsManager() {
   async function updateStatus(appointment, status) {
     if (updatingId !== null) return
     if (status === 'COMPLETED' && !canCompleteAppointment(appointment)) return
+    if (status === 'CANCELLED' && !canChangeAppointmentOnline(appointment, policy?.cancellationCutoffHours)) {
+      setError(cancellationMessage)
+      return
+    }
     setUpdatingId(appointment.id)
     try {
       setError('')
@@ -64,6 +74,11 @@ export default function AppointmentsManager() {
     <ProtectedRoute allowedRoles={['ADMIN']}>
       <section className="manager-page">
         <h2>Appointment Requests</h2>
+        {policyLoading && <p role="status">Loading clinic appointment policy…</p>}
+        {policyError && <div role="alert" className="form-error">
+          <p>{policyError}</p>
+          <button type="button" className="secondary" onClick={retryPolicy}>Retry policy</button>
+        </div>}
         {error && <p className="form-error">{error}</p>}
         {appts.length === 0 && <p>No appointments to manage.</p>}
         <table className="manager-table">
@@ -95,7 +110,11 @@ export default function AppointmentsManager() {
                         title={canCompleteAppointment(a, now) ? 'Mark complete after finishing the consultation' : 'Available from the scheduled appointment time'}
                         onClick={() => updateStatus(a, 'COMPLETED')}
                       >{updatingId === a.id ? 'Updating...' : 'Mark Complete'}</button>
-                      <button disabled={updatingId !== null} onClick={() => updateStatus(a, 'CANCELLED')}>Cancel</button>
+                      <button
+                        disabled={updatingId !== null || !canChangeAppointmentOnline(a, policy?.cancellationCutoffHours, now)}
+                        title={canChangeAppointmentOnline(a, policy?.cancellationCutoffHours, now) ? 'Cancel appointment' : cancellationMessage}
+                        onClick={() => updateStatus(a, 'CANCELLED')}
+                      >Cancel</button>
                     </>
                   )}
                 </td>

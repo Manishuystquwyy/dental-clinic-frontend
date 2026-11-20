@@ -1,0 +1,37 @@
+.appointment-refunds { margin-top: 20px; display: grid; gap: 12px; }
+.appointment-refund { padding: 18px; border: 1px solid #d9e8e7; border-radius: 12px; background: #f7fbfa; }
+.appointment-refund-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.appointment-refund-label { display: block; color: #657773; font-size: 11px; font-weight: 600; letter-spacing: .5px; text-transform: uppercase; }
+.appointment-refund-amount { display: block; margin-top: 4px; color: #1e4a43; font-size: 21px; }
+.appointment-refund-status { display: inline-flex; align-items: center; gap: 5px; padding: 6px 9px; border-radius: 20px; background: #e7f0ef; color: #315b55; font-size: 11px; font-weight: 700; }
+.appointment-refund--pending .appointment-refund-status { background: #fff3db; color: #885a12; }
+.appointment-refund--completed .appointment-refund-status { background: #e4f4e9; color: #27653f; }
+.appointment-refund--failed { border-color: #eddac0; background: #fffcf7; }
+.appointment-refund--failed .appointment-refund-status { background: #fff0d9; color: #805015; }
+.appointment-refund-progress { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 0; margin: 20px 0 15px; list-style: none; }
+.appointment-refund-progress li { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; color: #768680; font-size: 11px; }
+.appointment-refund-progress li:not(:last-child)::after { position: absolute; content: ''; height: 2px; background: #dbe5e1; width: calc(100% - 30px); top: 12px; left: calc(50% + 15px); }
+.appointment-refund-progress li.is-reached:not([aria-current]):not(:last-child)::after { background: #5d9b86; }
+.appointment-refund-step { display: flex; align-items: center; justify-content: center; width: 25px; height: 25px; border-radius: 50%; background: #e6ece9; font-weight: 700; }
+.appointment-refund-progress .is-reached { color: #2f6654; }
+.is-reached .appointment-refund-step { background: #dceee5; }
+.appointment-refund-progress li[aria-current] .appointment-refund-step { background: #245d4d; color: white; }
+.appointment-refund-message { margin: 0; font-size: 13px; line-height: 1.6; color: #52665e; }
+.appointment-refund-dates { display: grid; gap: 6px; margin: 12px 0 0; color: #657773; font-size: 11px; }
+.appointment-refund-dates div { display: flex; gap: 8px; flex-wrap: wrap; }
+.appointment-refund-dates dt { font-weight: 600; min-width: 60px; }
+.appointment-refund-dates dd { margin: 0; }
+.appointment-refund-reference { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 0; padding-top: 12px; border-top: 1px solid #e0e9e3; color: #657773; font-size: 11px; }
+.appointment-refund-reference dt { font-weight: 600; }
+.appointment-refund-reference dd { margin: 0; color: #38564b; overflow-wrap: anywhere; font-family: monospace; }
+.appointment-refund-contact, .appointment-refund-note a { display: inline-flex; align-items: center; gap: 4px; margin-top: 10px; color: #245d4d; font-size: 13px; font-weight: 600; }
+.appointment-refund-note { margin-top: 18px; padding-top: 15px; border-top: 1px solid #edf0f2; }
+.appointment-refund-note p { margin: 0; font-size: 13px; line-height: 1.6; color: #63716a; }
+.appointments-refund-refresh { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 20px 0 0; color: #5a6b63; font-size: 13px; }
+.appointments-refund-refresh p { margin: 0; }
+.appointments-refund-refresh button { padding: 5px 8px; font-size: 12px; }
+@media (max-width: 480px) {
+  .appointment-refund { padding: 15px; }
+  .appointment-refund-amount { font-size: 19px; }
+  .appointment-refund-status { font-size: 10px; }
+}
